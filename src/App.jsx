@@ -8,13 +8,17 @@ import NotificationPage from "./components/notification-page";
 import Navbar from "./components/navbar";
 import DiscoverPage from "./pages/discover";
 import ProfilePage from "./pages/profile";
+import BottomNavbar from "./components/bottom-navbar";
+import { useMediaQuery } from "@mui/material";
 
 function App() {
   const [count, setCount] = useState(0);
+  const isMobile = useMediaQuery("(max-width: 600px)");
 
   return (
     <BrowserRouter>
-      <Navbar />
+      {!isMobile && <Navbar />}
+      {isMobile && <BottomNavbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/notifications" element={<NotificationPage />} />

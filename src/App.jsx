@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NotificationPage from "./components/notification-page";
 import Navbar from "./components/navbar";
 import DiscoverPage from "./pages/discover";
+import ProfilePage from "./pages/profile";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/notifications" element={<NotificationPage />} />
         <Route path="/discover" element={<DiscoverPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );

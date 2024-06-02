@@ -1,10 +1,28 @@
 import { Avatar, IconButton, useMediaQuery } from "@mui/material";
 import AppsIcon from "@mui/icons-material/Apps";
 import { useState } from "react";
+import { createUserAccount } from "../../config/services";
 
 const UserProfileDetails = () => {
   const isMobile = useMediaQuery(`(max-width: 640px)`);
   const [posts, setPosts] = useState(21);
+  const buttonClickHandler = () => {
+    const payload = {
+      userId: "A00004",
+      username: "manju80kumawat",
+      password: "1234567890",
+      name: "Manju Kumawat",
+      phoneNumber: "+91-9372641712",
+      email: "manju80kumawat@gmail.com",
+    };
+    createUserAccount(payload)
+      .then((res) => {
+        console.log({ res });
+      })
+      .catch((err) => {
+        console.log({ err });
+      });
+  };
   return (
     <>
       <div className="w-full lg:w-11/12  xl:w-9/12 p-2 m-auto  flex flex-col items-center gap-4 justify-center mt-2">
@@ -81,6 +99,9 @@ const UserProfileDetails = () => {
             ))}
           </div>
         </div>
+      </div>
+      <div>
+        <button onClick={buttonClickHandler}>click me</button>
       </div>
     </>
   );

@@ -16,7 +16,12 @@ const postSchema = new mongoose.Schema({
     videoLink: {
       type: String,
     },
-    required: true,
+  },
+  isImage: {
+    type: Boolean,
+  },
+  isVideo: {
+    type: Boolean,
   },
   likes: {
     type: Array,
@@ -24,7 +29,7 @@ const postSchema = new mongoose.Schema({
   comments: {
     type: Array,
   },
-  date: {
+  createDate: {
     type: Date,
     default: Date.now,
   },

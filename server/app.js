@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/userRoutes");
 const cors = require('cors');
+const postRouter = require("./routes/postsRoutes");
+const notificationRouter = require("./routes/notificationRoutes");
 
 
 const app = express();
@@ -37,6 +39,8 @@ mongoose
 
 //Routes
 app.use("/user", userRoutes);
+app.use("/post", postRouter);
+app.use("/notification", notificationRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello, World!");

@@ -1,0 +1,30 @@
+.image-div-popup{
+    height: 50vw !important;
+    width: auto;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.post-popup-content-conatiner{
+    width: auto;
+    height: 100%;
+}
+
+.comment-section-popup{
+    width: 30vw;
+}
+
+.image-popup{
+    height: 100%;
+    width: 100%;
+    border: 1px solid yellow;
+    object-fit: contain;
+}
+
+@media screen and (max-width: 768px){
+
+    .comment-section-popup{
+        width: 35vw;
+    }
+}

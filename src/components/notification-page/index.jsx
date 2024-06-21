@@ -1,124 +1,50 @@
 import { Avatar, Divider, Icon, IconButton } from "@mui/material";
 import Navbar from "../navbar";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { useNavigate } from "react-router-dom";
+import { getAllNotifications } from "../../config/services";
+import { memo, useEffect, useState } from "react";
 
-const NotificationPage = () => {
-  const notifications = [
-    {
-      username: "JohnDoe",
-      userimage: "https://example.com/user1.jpg",
-      description: "You have a new message",
-      date: "2022-01-01",
-      time: "10:00 AM",
-      read: false,
-    },
-    {
-      username: "JaneSmith",
-      userimage: "https://example.com/user2.jpg",
-      description: "You have a new friend request",
-      date: "2022-01-02",
-      time: "02:30 PM",
-      read: true,
-    },
-    {
-      username: "JaneSmith",
-      userimage: "https://example.com/user2.jpg",
-      description: "You have a new friend request",
-      date: "2022-01-02",
-      time: "02:30 PM",
-      read: true,
-    },
-    {
-      username: "JaneSmith",
-      userimage: "https://example.com/user2.jpg",
-      description: "You have a new friend request",
-      date: "2022-01-02",
-      time: "02:30 PM",
-      read: true,
-    },
-    {
-      username: "JaneSmith",
-      userimage: "https://example.com/user2.jpg",
-      description: "You have a new friend request",
-      date: "2022-01-02",
-      time: "02:30 PM",
-      read: true,
-    },
-    {
-      username: "JaneSmith",
-      userimage: "https://example.com/user2.jpg",
-      description:
-        "You have a new friend request uajsd fkjasdf bsdajmfhaskdjfhak bj fabsh fdkjahs djfhv ajshvd fkj",
-      date: "2022-01-02",
-      time: "02:30 PM",
-      read: true,
-    },
-    {
-      username: "JaneSmith",
-      userimage: "https://example.com/user2.jpg",
-      description: "You have a new friend request",
-      date: "2022-01-02",
-      time: "02:30 PM",
-      read: true,
-    },
-    {
-      username: "JaneSmith",
-      userimage: "https://example.com/user2.jpg",
-      description:
-        "You have a new friend request uajsd fkjasdf bsdajmfhaskdjfhak bj fabsh fdkjahs djfhv ajshvd fkj",
-      date: "2022-01-02",
-      time: "02:30 PM",
-      read: true,
-    },
-    {
-      username: "JaneSmith",
-      userimage: "https://example.com/user2.jpg",
-      description: "You have a new friend request",
-      date: "2022-01-02",
-      time: "02:30 PM",
-      read: true,
-    },
-    {
-      username: "JaneSmith",
-      userimage: "https://example.com/user2.jpg",
-      description:
-        "You have a new friend request uajsd fkjasdf bsdajmfhaskdjfhak bj fabsh fdkjahs djfhv ajshvd fkj",
-      date: "2022-01-02",
-      time: "02:30 PM",
-      read: true,
-    },
-    {
-      username: "JaneSmith",
-      userimage: "https://example.com/user2.jpg",
-      description: "You have a new friend request",
-      date: "2022-01-02",
-      time: "02:30 PM",
-      read: true,
-    },
-    {
-      username: "JaneSmith",
-      userimage: "https://example.com/user2.jpg",
-      description:
-        "You have a new friend request uajsd fkjasdf bsdajmfhaskdjfhak bj fabsh fdkjahs djfhv ajshvd fkj",
-      date: "2022-01-02",
-      time: "02:30 PM",
-      read: true,
-    },
-    // Add more notifications as needed
-  ];
+const NotificationPage = memo(() => {
+  const userId = localStorage.getItem("userId");
+  const [allNotifications, setAllNotifications] = useState([]);
+  const navigate = useNavigate();
+
+  const navigateToNotifications = (notification) => {
+    navigate("/notifications", { state: { notification: notification } });
+  };
+
+  useEffect(() => {
+    if (userId) {
+      fetchingNotifications();
+    }
+  }, [userId]);
+
+  const fetchingNotifications = () => {
+    getAllNotifications(userId)
+      .then((response) => {
+        console.log(response);
+        setAllNotifications(response?.notifications);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div className="w-full lg:w-11/12  xl:w-9/12 p-2 m-auto  flex items-center justify-center">
-      <div className="w-full md:w-7/12 bg-primary rounded-xl p-2">
-        {notifications.map((notification, index) => (
+      <div className="w-full md:w-7/12 bg-primary rounded-xl overflow-hidden">
+        {allNotifications.map((notification, index) => (
           <>
             <div
               key={index}
-              className="flex items-center justify-between gap-2 mt-2 text-sm py-3"
+              className={`flex items-center justify-between text-sm p-3 ${
+                !notification?.isRead && "bg-gray-700"
+              } cursor-pointer`}
             >
               <div className="flex items-center gap-2">
                 <Avatar
                   src={notification.userimage}
-                  alt={notification.username}
+                  alt={notification.senderName}
                   sx={{
                     width: 45,
                     height: 45,
@@ -126,9 +52,9 @@ const NotificationPage = () => {
                 />
                 <div className="">
                   <span className="font-bold mr-2">
-                    {notification.username}
+                    {notification.senderUsername}
                   </span>
-                  <span>{notification.description}</span>
+                  <span>{notification.notifications}</span>
                 </div>
               </div>
               <div>
@@ -145,6 +71,6 @@ const NotificationPage = () => {
       </div>
     </div>
   );
-};
+});
 
 export default NotificationPage;

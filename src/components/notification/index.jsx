@@ -1,35 +1,35 @@
 import { Avatar } from "@mui/material";
 import "./notification.css";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { getAllNotifications } from "../../config/services";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Notification = () => {
-  const notifications = [
-    {
-      notificationDesc: "New message received",
-      user: "John Doe",
-      userName: "johndoe",
-      image: "path/to/user/image1.jpg"
-    },
-    {
-      notificationDesc: "New friend request",
-      user: "Jane Smith",
-      userName: "johnsmith",
-      image: "path/to/user/image2.jpg"
-    },
-    {
-      notificationDesc: "Liked your comment",
-      user: "Jane Smith",
-      userName: "johnsmith",
-      image: "path/to/user/image2.jpg"
-    },
-    {
-      notificationDesc: "Started following you",
-      user: "Jane Smith",
-      userName: "johnsmith",
-      image: "path/to/user/image2.jpg"
-    },
-    // Add more notifications as needed
-  ];
+  const userId = localStorage.getItem("userId");
+  const [allNotifications, setAllNotifications] = useState([]);
+  const navigate = useNavigate();
+
+  const navigateToNotifications = (notification) => {
+    navigate("/notifications", { state: { notification: notification } });
+  };
+
+  useEffect(() => {
+    if (userId) {
+      fetchingNotifications();
+    }
+  }, [userId]);
+
+  const fetchingNotifications = () => {
+    getAllNotifications(userId)
+      .then((response) => {
+        console.log(response);
+        setAllNotifications(response?.notifications);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div className="hidden lg:block w-full h-auto bg-primary rounded-xl flex-1 p-2">
@@ -37,15 +37,28 @@ const Notification = () => {
         <NotificationsIcon />
         <span className="text-lg font-bold">Notifications</span>
       </div>
-      {notifications.map((notification, index) => (
-        <div key={index} className="flex items-center gap-2 mt-2 text-sm">
-          <Avatar src={notification.image} alt={notification.user} className="w-8 h-8 rounded-full" />
-          <div className="">
-            <span className="font-bold mr-2">{notification.userName}</span>
-            <span>{notification.notificationDesc}</span>
+      {allNotifications
+        ?.slice(-10)
+        ?.reverse()
+        .map((notification, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-2 mt-2 text-sm cursor-pointer"
+            onClick={() => navigateToNotifications(notification)}
+          >
+            <Avatar
+              src={notification?.image}
+              alt={notification?.senderName}
+              className="w-8 h-8 rounded-full"
+            />
+            <div className="">
+              <span className="font-bold mr-2">
+                {notification?.senderUsername || "NA"}
+              </span>
+              <span>{notification?.notifications}</span>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
     </div>
   );
 };

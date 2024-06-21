@@ -11,7 +11,11 @@ const patchHeaders = {
   "Content-Type": "application/json",
 };
 
-export const getRequest = async (url, data) => {
+const imageHeaders = {
+  "Content-Type": "multipart/form-data",
+};
+
+export const getRequest = async (url) => {
   return new Promise((resolve, reject) => {
     axios
       .get(url, { headers: { ...getHeaders } })
@@ -26,8 +30,22 @@ export const getRequest = async (url, data) => {
 
 export const postRequest = async (url, data) => {
   return new Promise((resolve, reject) => {
+    const headers = { ...postHeaders };
     axios
-      .post(url, data, { headers: { ...postHeaders } })
+      .post(url, data, { headers })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+export const postImageRequest = async (url, data) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(url, data, { ...imageHeaders })
       .then((response) => {
         resolve(response.data);
       })

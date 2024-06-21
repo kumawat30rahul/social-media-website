@@ -1,9 +1,60 @@
 import { Avatar } from "@mui/material";
-import { useState } from "react";
-import './discover.css'
+import { useEffect, useState } from "react";
+import "./discover.css";
+import { fetchAllPosts, getAllUsers } from "../../config/services";
+import { useNavigate } from "react-router-dom";
 
 const Discover = () => {
   const [count, setCount] = useState(20);
+  const [allPosts, setAllPosts] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const navigate = useNavigate();
+
+  const fetchingAllUsers = () => {
+    getAllUsers()
+      .then((response) => {
+        console.log(response);
+        const userData = response?.userdetails?.map((user) => {
+          return {
+            userId: user?.userId,
+            userName: user?.username,
+            name: user?.name,
+            image: user?.profilePic,
+            isFollowing: user?.followers?.includes(user?.userId),
+          };
+        });
+        setAllUsers(userData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const fetchingAllPosts = () => {
+    fetchAllPosts()
+      .then((response) => {
+        console.log(response);
+        const postArray = response?.posts?.map((post) => {
+          return {
+            postId: post?.postId,
+            userId: post?.userId,
+            image: post?.postMedia?.imageLink,
+          };
+        });
+        setAllPosts(postArray);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const userNavigationToProfilePage = (userId) => {
+    navigate(`/profile/${userId}`);
+  };
+
+  useEffect(() => {
+    fetchingAllPosts();
+    fetchingAllUsers();
+  }, []);
   return (
     <div className="w-full lg:w-11/12  xl:w-9/12 p-2 m-auto  flex flex-col gap-4 items-start justify-center mt-2 overflow-hidden">
       <div className="w-full h-10">
@@ -15,9 +66,11 @@ const Discover = () => {
       <div className="flex items-start flex-col gap-3 w-full">
         <span>Peoples</span>
         <div className="w-full h-auto flex items-center gap-4 overflow-x-scroll py-4 -my-4 scrollbar-style">
-          {Array.from({ length: count }).map((_, index) => (
-            <div className="flex items-center gap-2 bg-primary rounded-xl p-3 w-60 shrink-0 relative cursor-pointer">
-              <div className="absolute h-6 w-6 -top-2 -right-2 rounded-full bg-blue-700"></div>
+          {allUsers?.map((user, index) => (
+            <div className="flex items-center gap-2 bg-primary rounded-xl p-3 w-auto min-w-60 shrink-0 relative cursor-pointer" onClick={()=>userNavigationToProfilePage(user?.userId)}>
+              {user?.isFollowing && (
+                <div className="absolute h-6 w-6 -top-2 -right-2 rounded-full bg-blue-700"></div>
+              )}
               <Avatar
                 sx={{
                   height: 50,
@@ -25,8 +78,8 @@ const Discover = () => {
                 }}
               />
               <div className="flex flex-col items-start">
-                <span>jhonedow</span>
-                <span>Rahul Kumawat</span>
+                <span>{user?.userName}</span>
+                <span>{user?.name}</span>
               </div>
             </div>
           ))}
@@ -34,15 +87,12 @@ const Discover = () => {
       </div>
       <span className="mt-4">Posts</span>
       <div className="h-full w-full grid grid-cols-3 gap-1">
-        {Array.from({ length: count }).map((_, index) => (
+        {allPosts?.map((item, index) => (
           <div
             key={index}
             className="bg-primary w-full h-auto aspect-square cursor-pointer"
           >
-            <img
-              src="https://pbs.twimg.com/media/Fn5qjz9WQAAXUgE.jpg"
-              className="w-full h-full object-cover"
-            />
+            <img src={item?.image} className="w-full h-full object-cover" />
           </div>
         ))}
       </div>

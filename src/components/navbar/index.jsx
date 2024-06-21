@@ -15,6 +15,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const userId = localStorage.getItem("userId");
   const [openSearch, setOpenSearch] = useState(false);
   const navigation = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -62,7 +63,7 @@ const Navbar = () => {
   };
 
   const handleProfile = () => {
-    navigation("/profile");
+    navigation(`/profile/${userId}`, { state: { isSelf: true } });
     handleClose();
   };
 

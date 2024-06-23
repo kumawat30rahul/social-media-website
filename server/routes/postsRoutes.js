@@ -2,24 +2,19 @@ const express = require("express");
 const Post = require("../models/posts");
 const UserDetail = require("../models/userDetail");
 const Notification = require("../models/notification");
-// const { gzip, ungzip } = require("node-gzip");
-const multer = require("multer");
+const cloudinary = require("../utils/cloudinary");
+const upload = require("../middlewares/multer");
 
-const upload = multer();
 const postRouter = express.Router();
 
-postRouter.post("/create", upload.any(), async (req, res) => {
-  const { userId, postId, isImage, isVideo, caption, createdDate } = req.body;
+postRouter.post("/create", upload.single("mediaLink"), async (req, res) => {
+  const { userId, isImage, isVideo, caption, createdDate } = req.body;
 
   if (!userId) {
     return res.status(400).json({ message: "Missing UserId" });
   }
 
-  if (!postId) {
-    return res.status(400).json({ message: "Missing PostId" });
-  }
-
-  if (!req?.files[0]) {
+  if (!req?.file) {
     return res.status(400).json({ message: "Missing MediaLink" });
   }
 
@@ -32,11 +27,33 @@ postRouter.post("/create", upload.any(), async (req, res) => {
   }
 
   try {
+    const lastPost = await Post.findOne().sort({ _id: -1 });
+    let idNumber = lastPost ? parseInt(lastPost.postId.slice(1)) : 0;
+    idNumber++;
+    const newIdNumber = String(idNumber).padStart(5, "0");
+    const newPostId = "P" + newIdNumber;
+
+    let imageLink;
+    try {
+      const result = await cloudinary.uploader.upload(req?.file.path);
+      console.log(result);
+      imageLink = result.secure_url;
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({
+          message: "Internal Server Error from cloudinary",
+          error: error,
+        });
+    }
+    // console.log({ imageUrl });
+
     const post = new Post({
       userId,
-      postId,
+      postId: newPostId,
       postMedia: {
-        imageLink: req?.files[0]?.buffer.toString("base64"),
+        imageLink: imageLink,
         videoLink: null,
       },
       isImage,
@@ -49,7 +66,7 @@ postRouter.post("/create", upload.any(), async (req, res) => {
     if (!userDetails) {
       return res.status(404).json({ message: "User not found" });
     }
-    userDetails.posts.push(postId);
+    userDetails.posts.push(newPostId);
     await post.save();
     await userDetails.save();
     return res
@@ -244,8 +261,8 @@ postRouter.get("/get-all/:userId", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    let postsIdArray = user?.followers?.map((userId) => userId);
-    const posts = await Post.find({ userId: { $in: postsIdArray } });
+    let followersIdArray = user?.following?.map((userId) => userId);
+    const posts = await Post.find({ userId: { $in: followersIdArray } });
     const allPostUserId = posts.map((post) => post.userId);
     const findAllPostsUser = await UserDetail.find({
       userId: { $in: allPostUserId },
@@ -256,6 +273,7 @@ postRouter.get("/get-all/:userId", async (req, res) => {
         const user = findAllPostsUser.find(
           (user) => user.userId === post.userId
         );
+
         return {
           ...post._doc,
           user: {

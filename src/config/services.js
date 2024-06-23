@@ -115,3 +115,8 @@ export const registerUser = (payload) => {
   const url = `${envBaseUrl}/user/register`;
   return postRequest(url, payload);
 };
+
+export const userLogin = (payload) => {
+  const url = `${envBaseUrl}/user/login`;
+  return postRequest(url, payload);
+};

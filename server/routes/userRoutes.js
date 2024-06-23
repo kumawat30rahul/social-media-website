@@ -9,6 +9,7 @@ const {
 const UserDetail = require("../models/userDetail");
 const Notification = require("../models/notification");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const userRoutes = express.Router();
 
@@ -86,6 +87,67 @@ userRoutes.post("/register", async (req, res) => {
       .json({ message: "User registered successfully", status: "success" });
   } catch (error) {
     console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error });
+  }
+});
+
+//login user
+userRoutes.post("/login", async (req, res) => {
+  const { password, loginId } = req.body;
+
+  if (!loginId && !password) {
+    return res
+      .status(400)
+      .json({ message: "All fields are required", status: "error" });
+  }
+
+  try {
+    let user;
+    if (loginId.includes("@")) {
+      user = await User.findOne({ email: loginId });
+    } else {
+      user = await User.findOne({ username: loginId });
+    }
+    console.log(user);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found", status: "error" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log(isMatch);
+
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ message: "Invalid password", status: "error" });
+    }
+
+    const token = jwt.sign(
+      {
+        loginTime: new Date(),
+        username: user?.username,
+        email: user?.email,
+      },
+      process.env.SALT_ROUND
+    );
+
+    return res.status(200).json({
+      message: "User logged in successfully",
+      userDetails: {
+        userId: user.userId,
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        token: token,
+      },
+      status: "success",
+    });
+  } catch (error) {
     return res
       .status(500)
       .json({ message: "Internal server error", error: error });

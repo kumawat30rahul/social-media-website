@@ -137,7 +137,8 @@ const FeedPost = ({ post, key }) => {
         <div className="h-full w-full flex items-center justify-center ">
           <img
             //   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPWJ0i-sYdb40j4VW_I0J7pFSgHsv_DPB-LA&s"
-            src={`data:image/jpeg;base64,${post?.postMedia?.imageLink}`}
+            // src={`data:image/jpeg;base64,${btoa(post?.postMedia?.imageLink)}`}
+            src={post?.postMedia?.imageLink}
             alt="Post"
             className="h-full w-auto object-contain"
           />

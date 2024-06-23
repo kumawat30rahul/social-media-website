@@ -120,7 +120,7 @@ const SingupPage = () => {
             />
             <div className="w-full flex items-center relative">
               <input
-                type="type"
+                type="text"
                 placeholder="Username"
                 className="w-full h-10 pl-2 rounded-lg bg-primary text-white border border-gray-500 mt-4"
                 onChange={(e) => debounceUsername(e.target.value)}

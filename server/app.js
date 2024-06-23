@@ -6,11 +6,8 @@ const postRouter = require("./routes/postsRoutes");
 const notificationRouter = require("./routes/notificationRoutes");
 const imageRouter = require("./routes/imageRouter");
 const bodyParser = require("body-parser");
-const Grid = require("gridfs-stream").Grid;
-// const dotenv = require("dotenv");
 
 const app = express();
-// dotenv.config();
 
 //Env variables
 const port = process.env.PORT || 5001;
@@ -21,8 +18,6 @@ const mongo_uri = process.env.MONGO_URI;
 // app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-//Connect to MongoDB
 
 //cors
 const corsoptions = {
@@ -37,7 +32,7 @@ app.use(cors(corsoptions));
 //connections
 mongoose
   .connect(mongo_uri)
-  .then(() => {
+  .then((client) => {
     console.log("Connected to MongoDB");
   })
   .catch((err) => {

@@ -2,84 +2,84 @@ const express = require("express");
 const Post = require("../models/posts");
 const UserDetail = require("../models/userDetail");
 const Notification = require("../models/notification");
-const cloudinary = require("../utils/cloudinary");
-const upload = require("../middlewares/multer");
+// const cloudinary = require("../utils/cloudinary");
+// const upload = require("../middlewares/multer");
 
 const postRouter = express.Router();
 
-postRouter.post("/create", upload.single("mediaLink"), async (req, res) => {
-  const { userId, isImage, isVideo, caption, createdDate } = req.body;
+// postRouter.post("/create", upload.single("mediaLink"), async (req, res) => {
+//   const { userId, isImage, isVideo, caption, createdDate } = req.body;
 
-  if (!userId) {
-    return res.status(400).json({ message: "Missing UserId" });
-  }
+//   if (!userId) {
+//     return res.status(400).json({ message: "Missing UserId" });
+//   }
 
-  if (!req?.file) {
-    return res.status(400).json({ message: "Missing MediaLink" });
-  }
+//   if (!req?.file) {
+//     return res.status(400).json({ message: "Missing MediaLink" });
+//   }
 
-  if (!isImage && !isVideo) {
-    return res.status(400).json({ message: "Missing Media Type" });
-  }
+//   if (!isImage && !isVideo) {
+//     return res.status(400).json({ message: "Missing Media Type" });
+//   }
 
-  if (!createdDate) {
-    return res.status(400).json({ message: "Missing createdDate" });
-  }
+//   if (!createdDate) {
+//     return res.status(400).json({ message: "Missing createdDate" });
+//   }
 
-  try {
-    const lastPost = await Post.findOne().sort({ _id: -1 });
-    let idNumber = lastPost ? parseInt(lastPost.postId.slice(1)) : 0;
-    idNumber++;
-    const newIdNumber = String(idNumber).padStart(5, "0");
-    const newPostId = "P" + newIdNumber;
+//   try {
+//     const lastPost = await Post.findOne().sort({ _id: -1 });
+//     let idNumber = lastPost ? parseInt(lastPost.postId.slice(1)) : 0;
+//     idNumber++;
+//     const newIdNumber = String(idNumber).padStart(5, "0");
+//     const newPostId = "P" + newIdNumber;
 
-    let imageLink;
-    // try {
-    //   const result = await cloudinary.uploader.upload(req?.file.path);
-    //   console.log(result);
-    //   imageLink = result.secure_url;
-    // } catch (error) {
-    //   console.log(error);
-    //   return res
-    //     .status(500)
-    //     .json({
-    //       message: "Internal Server Error from cloudinary",
-    //       error: error,
-    //     });
-    // }
-    // console.log({ imageUrl });
+//     let imageLink;
+//     // try {
+//     //   const result = await cloudinary.uploader.upload(req?.file.path);
+//     //   console.log(result);
+//     //   imageLink = result.secure_url;
+//     // } catch (error) {
+//     //   console.log(error);
+//     //   return res
+//     //     .status(500)
+//     //     .json({
+//     //       message: "Internal Server Error from cloudinary",
+//     //       error: error,
+//     //     });
+//     // }
+//     // console.log({ imageUrl });
 
-    const post = new Post({
-      userId,
-      postId: newPostId,
-      postMedia: {
-        imageLink: req?.file?.path,
-        videoLink: null,
-      },
-      isImage,
-      isVideo,
-      caption,
-      createdDate,
-    });
+//     const post = new Post({
+//       userId,
+//       postId: newPostId,
+//       postMedia: {
+//         imageLink: req?.file?.path,
+//         videoLink: null,
+//       },
+//       isImage,
+//       isVideo,
+//       caption,
+//       createdDate,
+//     });
 
-    const userDetails = await UserDetail.findOne({ userId: userId });
-    if (!userDetails) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    userDetails.posts.push(newPostId);
-    await post.save();
-    await userDetails.save();
-    return res
-      .status(201)
-      .json({ message: "Post Created Successfully", status: "success" });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal Server Error", error: error });
-  }
+//     const userDetails = await UserDetail.findOne({ userId: userId });
+//     if (!userDetails) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+//     userDetails.posts.push(newPostId);
+//     await post.save();
+//     await userDetails.save();
+//     return res
+//       .status(201)
+//       .json({ message: "Post Created Successfully", status: "success" });
+//   } catch (error) {
+//     return res
+//       .status(500)
+//       .json({ message: "Internal Server Error", error: error });
+//   }
 
-  return;
-});
+//   return;
+// });
 
 //update post
 postRouter.patch("/update", async (req, res) => {

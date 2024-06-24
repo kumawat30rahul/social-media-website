@@ -1,5 +1,6 @@
 // import EnvConfig from "./envConfig";
 import { getRequest, postImageRequest, postRequest } from "./serviceConfig";
+// import process from "process";
 
 const METHOD = {
   GET: "GET",
@@ -11,6 +12,7 @@ const METHOD = {
 
 // const envBaseUrl = EnvConfig().envBaseurl;
 const envBaseUrl = process.env.PROD_URL;
+console.log("envBaseUrl", envBaseUrl);
 
 export const createUserAccount = (payload) => {
   const url = `${envBaseUrl}/user/register`;

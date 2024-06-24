@@ -1,5 +1,5 @@
 import axios from "axios";
-import EnvConfig from "./envConfig";
+// import EnvConfig from "./envConfig";
 
 const postHeaders = {
   "Content-Type": "application/json",

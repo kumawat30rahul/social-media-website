@@ -3,14 +3,15 @@ import PermMediaIcon from "@mui/icons-material/PermMedia";
 import { useEffect, useState } from "react";
 import { createPost, uploadingImage } from "../../config/services";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { useSnackbar } from "../hooks/snackbar";
 
 const AddPost = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [caption, setCaption] = useState("");
   const userId = localStorage.getItem("userId");
+  const showSnackbar = useSnackbar();
   const [postLoading, setPostLoading] = useState(false);
   const handleFileChange = (event) => {
-    console.log(event);
     setSelectedImage(event.target.files[0]);
   };
 
@@ -30,11 +31,11 @@ const AddPost = () => {
 
     createPost(formData)
       .then((res) => {
-        console.log(res);
+        showSnackbar(res?.message, "success");
         setPostLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        showSnackbar(err?.message, "success");
         setPostLoading(false);
       });
   };

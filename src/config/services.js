@@ -11,7 +11,7 @@ const METHOD = {
 };
 
 // const envBaseUrl = EnvConfig().envBaseurl;
-const envBaseUrl = process.env.PROD_URL;
+const envBaseUrl = import.meta.env.VITE_PROD_URL;
 console.log("envBaseUrl", envBaseUrl);
 
 export const createUserAccount = (payload) => {

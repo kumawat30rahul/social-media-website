@@ -4,7 +4,6 @@ const userRoutes = require("./routes/userRoutes");
 const cors = require("cors");
 const postRouter = require("./routes/postsRoutes");
 const notificationRouter = require("./routes/notificationRoutes");
-const imageRouter = require("./routes/imageRouter");
 const bodyParser = require("body-parser");
 
 const app = express();

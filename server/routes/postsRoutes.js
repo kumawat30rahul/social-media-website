@@ -2,8 +2,8 @@ const express = require("express");
 const Post = require("../models/posts");
 const UserDetail = require("../models/userDetail");
 const Notification = require("../models/notification");
-// const cloudinary = require("../utils/cloudinary");
-// const upload = require("../middlewares/multer");
+const cloudinary = require("../utils/cloudinary");
+const upload = require("../middlewares/multer");
 
 const postRouter = express.Router();
 
@@ -34,26 +34,24 @@ postRouter.post("/create", upload.single("mediaLink"), async (req, res) => {
     const newPostId = "P" + newIdNumber;
 
     let imageLink;
-    // try {
-    //   const result = await cloudinary.uploader.upload(req?.file.path);
-    //   console.log(result);
-    //   imageLink = result.secure_url;
-    // } catch (error) {
-    //   console.log(error);
-    //   return res
-    //     .status(500)
-    //     .json({
-    //       message: "Internal Server Error from cloudinary",
-    //       error: error,
-    //     });
-    // }
+    try {
+      const result = await cloudinary.uploader.upload(req?.file.path);
+      console.log(result);
+      imageLink = result.secure_url;
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "Internal Server Error from cloudinary",
+        error: error,
+      });
+    }
     // console.log({ imageUrl });
 
     const post = new Post({
       userId,
       postId: newPostId,
       postMedia: {
-        imageLink: req?.file?.path,
+        imageLink: imageLink,
         videoLink: null,
       },
       isImage,

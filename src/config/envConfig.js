@@ -5,7 +5,7 @@ const EnvConfig = () => {
         baseurl: "http://localhost:5000",
       },
       production: {
-        baseurl: process.env.PROD_URL || "https://api.example.com",
+        baseurl: process.env.PROD_URL,
       },
     },
   };

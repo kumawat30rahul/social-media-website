@@ -23,8 +23,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const corsoptions = {
   origin: [
     "http://localhost:5173",
-    "http://social-media-website-silk.vercel.app/",
-    "http://social-media-website-silk.vercel.app",
+    "https://social-media-website-silk.vercel.app/",
+    "https://social-media-website-silk.vercel.app",
   ], // restrict calls to those this address
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // allow these methods
   credentials: true, // allow credentials (cookies, authorization headers, etc.)

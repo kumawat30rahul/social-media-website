@@ -1,7 +1,7 @@
 const EnvConfig = () => {
   let config = {
     env: {
-      local: {
+      development: {
         baseurl: "http://localhost:5000",
       },
       production: {
@@ -11,11 +11,10 @@ const EnvConfig = () => {
   };
 
   let env = process.env.NODE_ENV;
-
-  console.log(`Environment: ${env}`);
+  console.log("env", env);
 
   return {
-    envBaseurl: config.env[env].baseurl,
+    envBaseurl: env,
   };
 };
 

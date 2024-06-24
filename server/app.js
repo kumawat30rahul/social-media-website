@@ -19,7 +19,7 @@ const mongo_uri = process.env.MONGO_URI;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/tmp"));
-app.use("./tmp", express.static("tmp"));
+app.use(express.static("tmp"));
 //cors
 const corsoptions = {
   origin: [
@@ -27,14 +27,17 @@ const corsoptions = {
     "http://localhost:5173",
     "http://localhost:4173/",
     "http://localhost:4173",
-    "https://social-media-website-esci.vercel.app/",
-    "https://social-media-website-esci.vercel.app",
+    "https://social-media-website-silk.vercel.app/",
+    "https://social-media-website-silk.vercel.app",
   ], // restrict calls to those this address
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   preflightContinue: false,
   optionsSuccessStatus: 204,
 };
-
+app.use((req, res, next) => {
+  console.log("Request Origin:", req.headers.origin);
+  next();
+});
 app.use(cors(corsoptions));
 
 //connections

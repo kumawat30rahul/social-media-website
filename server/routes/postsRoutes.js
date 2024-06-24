@@ -34,26 +34,26 @@ postRouter.post("/create", upload.single("mediaLink"), async (req, res) => {
     const newPostId = "P" + newIdNumber;
 
     let imageLink;
-    try {
-      const result = await cloudinary.uploader.upload(req?.file.path);
-      console.log(result);
-      imageLink = result.secure_url;
-    } catch (error) {
-      console.log(error);
-      return res
-        .status(500)
-        .json({
-          message: "Internal Server Error from cloudinary",
-          error: error,
-        });
-    }
+    // try {
+    //   const result = await cloudinary.uploader.upload(req?.file.path);
+    //   console.log(result);
+    //   imageLink = result.secure_url;
+    // } catch (error) {
+    //   console.log(error);
+    //   return res
+    //     .status(500)
+    //     .json({
+    //       message: "Internal Server Error from cloudinary",
+    //       error: error,
+    //     });
+    // }
     // console.log({ imageUrl });
 
     const post = new Post({
       userId,
       postId: newPostId,
       postMedia: {
-        imageLink: imageLink,
+        imageLink: req?.file?.path,
         videoLink: null,
       },
       isImage,

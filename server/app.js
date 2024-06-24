@@ -54,7 +54,7 @@ mongoose
 app.use("/user", userRoutes);
 app.use("/post", postRouter);
 app.use("/notification", notificationRouter);
-app.use("/image", imageRouter);
+// app.use("/image", imageRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello, World!");

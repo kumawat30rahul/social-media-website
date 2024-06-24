@@ -5,12 +5,12 @@ const EnvConfig = () => {
         baseurl: "http://localhost:5000",
       },
       production: {
-        baseurl: process.env.VITE_PROD_URL,
+        baseurl: process.env.PROD_URL,
       },
     },
   };
 
-  let env = process.env.VITE_NODE_ENV;
+  let env = process.env.NODE_ENV;
   console.log("env", env);
 
   return {

@@ -1,4 +1,4 @@
-import EnvConfig from "./envConfig";
+// import EnvConfig from "./envConfig";
 import { getRequest, postImageRequest, postRequest } from "./serviceConfig";
 
 const METHOD = {
@@ -9,7 +9,8 @@ const METHOD = {
   PATCH: "PATCH",
 };
 
-const envBaseUrl = EnvConfig().envBaseurl;
+// const envBaseUrl = EnvConfig().envBaseurl;
+const envBaseUrl = process.env.PROD_URL;
 
 export const createUserAccount = (payload) => {
   const url = `${envBaseUrl}/user/register`;

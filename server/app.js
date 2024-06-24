@@ -18,7 +18,7 @@ const mongo_uri = process.env.MONGO_URI;
 // app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use("/tmp", express.static("tmp"));
 //cors
 const corsoptions = {
   origin: [

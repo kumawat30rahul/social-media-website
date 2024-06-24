@@ -23,12 +23,15 @@ app.use("./tmp", express.static("tmp"));
 //cors
 const corsoptions = {
   origin: [
+    "http://localhost:5173/",
     "http://localhost:5173",
-    "https://social-media-website-silk.vercel.app/",
-    "https://social-media-website-silk.vercel.app",
+    "http://localhost:4173/",
+    "http://localhost:4173",
+    "https://social-media-website-esci.vercel.app/",
+    "https://social-media-website-esci.vercel.app",
   ], // restrict calls to those this address
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // allow these methods
-  credentials: true, // allow credentials (cookies, authorization headers, etc.)
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
   optionsSuccessStatus: 204,
 };
 

@@ -14,7 +14,7 @@ const EnvConfig = () => {
   console.log("env", env);
 
   return {
-    envBaseurl: env,
+    envBaseurl: config.env[env].baseurl,
   };
 };
 

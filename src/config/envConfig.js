@@ -10,7 +10,7 @@ const EnvConfig = () => {
     },
   };
 
-  let env = process.env.NODE_ENV || "local";
+  let env = process.env.NODE_ENV;
 
   console.log(`Environment: ${env}`);
 

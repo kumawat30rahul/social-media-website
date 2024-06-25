@@ -37,19 +37,19 @@ function App() {
       {isMobile && !isSingupOrLogin && <BottomNavbar />}
       <Routes>
         <Route path="*" element={<Error404 />} />
-        {/* <Route
+        <Route
           path="/"
           element={
-            <ProtectedRoute> */}
-        {/* <Routes> */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/notifications" element={<NotificationPage />} />
-        <Route path="/discover" element={<DiscoverPage />} />
-        <Route path="/profile/:userId" element={<ProfilePage />} />
-        {/* </Routes> */}
-        {/* </ProtectedRoute>
+            <ProtectedRoute>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/notifications" element={<NotificationPage />} />
+                <Route path="/discover" element={<DiscoverPage />} />
+                <Route path="/profile/:userId" element={<ProfilePage />} />
+              </Routes>
+            </ProtectedRoute>
           }
-        /> */}
+        />
         <Route path="/signup" element={<SingupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forget-password" element={<ForgetPassword />} />

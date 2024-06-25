@@ -1,21 +1,20 @@
 import { Avatar, CircularProgress } from "@mui/material";
 import PermMediaIcon from "@mui/icons-material/PermMedia";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { createPost, uploadingImage } from "../../config/services";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ReactToaster, { useSnackbar } from "../hooks/snackbar";
 
-const AddPost = () => {
+const AddPost = memo(() => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [caption, setCaption] = useState("");
   const userId = localStorage.getItem("userId");
   const showSnackbar = useSnackbar();
   const [postLoading, setPostLoading] = useState(false);
   const handleFileChange = (event) => {
+    console.log(event);
     setSelectedImage(event.target.files[0]);
   };
-
-  console.log(selectedImage);
 
   const removeSelectedImage = () => {
     setSelectedImage(null);
@@ -107,6 +106,6 @@ const AddPost = () => {
       </div>
     </div>
   );
-};
+});
 
 export default AddPost;

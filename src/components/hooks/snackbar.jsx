@@ -18,6 +18,7 @@ export const useSnackbar = () => {
       position: "top-right",
       autoClose: 5000,
     };
+    console.log(message, severity);
 
     switch (severity) {
       case "success":

@@ -3,7 +3,7 @@ import PermMediaIcon from "@mui/icons-material/PermMedia";
 import { useEffect, useState } from "react";
 import { createPost, uploadingImage } from "../../config/services";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useSnackbar } from "../hooks/snackbar";
+import ReactToaster, { useSnackbar } from "../hooks/snackbar";
 
 const AddPost = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -14,6 +14,8 @@ const AddPost = () => {
   const handleFileChange = (event) => {
     setSelectedImage(event.target.files[0]);
   };
+
+  console.log(selectedImage);
 
   const removeSelectedImage = () => {
     setSelectedImage(null);
@@ -31,17 +33,18 @@ const AddPost = () => {
 
     createPost(formData)
       .then((res) => {
+        console.log(res);
         showSnackbar(res?.message, "success");
+        setSelectedImage(null);
         setPostLoading(false);
       })
       .catch((err) => {
-        showSnackbar(err?.message, "success");
+        showSnackbar(err?.message, "error");
         setPostLoading(false);
       });
   };
-
   return (
-    <div className="bg-primary rounded-xl p-4">
+    <div className="bg-gray-700 sm:bg-primary sm:rounded-xl p-4">
       <div className="flex items-center gap-2">
         <Avatar />
         <div className="w-full">

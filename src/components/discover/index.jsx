@@ -57,17 +57,20 @@ const Discover = () => {
   }, []);
   return (
     <div className="w-full lg:w-11/12  xl:w-9/12 p-2 m-auto  flex flex-col gap-4 items-start justify-center mt-2 overflow-hidden">
-      <div className="w-full h-10">
+      {/* <div className="w-full h-10">
         <input
           placeholder="Search people or posts"
           className="px-4 w-full h-full rounded-full bg-transparent border border-gray-500"
         />
-      </div>
+      </div> */}
       <div className="flex items-start flex-col gap-3 w-full">
         <span>Peoples</span>
         <div className="w-full h-auto flex items-center gap-4 overflow-x-scroll py-4 -my-4 scrollbar-style">
           {allUsers?.map((user, index) => (
-            <div className="flex items-center gap-2 bg-primary rounded-xl p-3 w-auto min-w-60 shrink-0 relative cursor-pointer" onClick={()=>userNavigationToProfilePage(user?.userId)}>
+            <div
+              className="flex items-center gap-2 bg-primary rounded-xl p-3 w-auto min-w-60 shrink-0 relative cursor-pointer"
+              onClick={() => userNavigationToProfilePage(user?.userId)}
+            >
               {user?.isFollowing && (
                 <div className="absolute h-6 w-6 -top-2 -right-2 rounded-full bg-blue-700"></div>
               )}

@@ -13,6 +13,7 @@ import LoginPage from "./components/auth/login";
 import ForgetPassword from "./components/auth/forget-password";
 import ProtectedRoute from "./components/protectedRoutes/protectedRoutes";
 import Error404 from "./components/error404";
+import ReactToaster from "./components/hooks/snackbar";
 
 function App() {
   const isMobile = useMediaQuery("(max-width: 600px)");
@@ -32,27 +33,28 @@ function App() {
 
   return (
     <BrowserRouter>
-      {!isMobile && !isSingupOrLogin && <Navbar />}
+      {!isSingupOrLogin && <Navbar />}
       {isMobile && !isSingupOrLogin && <BottomNavbar />}
       <Routes>
         <Route path="*" element={<Error404 />} />
-        <Route
+        {/* <Route
           path="/"
           element={
-            <ProtectedRoute>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/notifications" element={<NotificationPage />} />
-                <Route path="/discover" element={<DiscoverPage />} />
-                <Route path="/profile/:userId" element={<ProfilePage />} />
-              </Routes>
-            </ProtectedRoute>
+            <ProtectedRoute> */}
+        {/* <Routes> */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/notifications" element={<NotificationPage />} />
+        <Route path="/discover" element={<DiscoverPage />} />
+        <Route path="/profile/:userId" element={<ProfilePage />} />
+        {/* </Routes> */}
+        {/* </ProtectedRoute>
           }
-        />
+        /> */}
         <Route path="/signup" element={<SingupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
       </Routes>
+      <ReactToaster />
     </BrowserRouter>
   );
 }

@@ -1,11 +1,12 @@
-import { Avatar } from "@mui/material";
+import { Avatar, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import "./discover.css";
 import { fetchAllPosts, getAllUsers } from "../../config/services";
 import { useNavigate } from "react-router-dom";
 
 const Discover = () => {
-  const [count, setCount] = useState(20);
+  const selfUserId = localStorage.getItem("userId");
+  const [isSelf, setIsSelf] = useState(false); // [1
   const [allPosts, setAllPosts] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const navigate = useNavigate();
@@ -14,16 +15,25 @@ const Discover = () => {
     getAllUsers()
       .then((response) => {
         console.log(response);
-        const userData = response?.userdetails?.map((user) => {
-          return {
-            userId: user?.userId,
-            userName: user?.username,
-            name: user?.name,
-            image: user?.profilePic,
-            isFollowing: user?.followers?.includes(user?.userId),
-          };
-        });
+        const userData = response?.userdetails
+          ?.map((user) => {
+            return {
+              userId: user?.userId,
+              userName: user?.username,
+              name: user?.name,
+              image: user?.profilePic,
+              isFollowing: user?.followers?.includes(selfUserId),
+            };
+          })
+          .filter((user) => {
+            if (user.userId !== selfUserId) {
+              return user;
+            }
+          });
         setAllUsers(userData);
+        if (userData.find((user) => user.userId === selfUserId)) {
+          setIsSelf(true);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -72,7 +82,9 @@ const Discover = () => {
               onClick={() => userNavigationToProfilePage(user?.userId)}
             >
               {user?.isFollowing && (
-                <div className="absolute h-6 w-6 -top-2 -right-2 rounded-full bg-blue-700"></div>
+                <Tooltip title="Following">
+                  <div className="absolute h-6 w-6 -top-2 -right-2 rounded-full bg-blue-700"></div>
+                </Tooltip>
               )}
               <Avatar
                 sx={{

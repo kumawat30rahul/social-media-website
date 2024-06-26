@@ -3,7 +3,7 @@ import ExploreIcon from "@mui/icons-material/Explore";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useNavigate } from "react-router-dom";
-import { Drawer, IconButton } from "@mui/material";
+import { Box, Drawer, IconButton, Modal } from "@mui/material";
 import AddPost from "../add-post";
 import { useMemo, useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -37,6 +37,14 @@ const BottomNavbar = () => {
   const handleAddPostDrawerClose = () => {
     setAddPostDrawer(false);
   };
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    boxShadow: 24,
+  };
 
   return (
     <>
@@ -56,7 +64,19 @@ const BottomNavbar = () => {
           );
         })}
       </div>
-      <Drawer
+      <Modal
+        open={openAddPostDrawer}
+        onClose={handleAddPostDrawerClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <div className="w-full">
+            <AddPost />
+          </div>
+        </Box>
+      </Modal>
+      {/* <Drawer
         open={openAddPostDrawer}
         anchor="bottom"
         onClose={handleAddPostDrawerClose}
@@ -77,7 +97,7 @@ const BottomNavbar = () => {
         <div className="w-full">
           <AddPost />
         </div>
-      </Drawer>
+      </Drawer> */}
     </>
   );
 };

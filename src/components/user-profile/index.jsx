@@ -33,7 +33,7 @@ const UserProfileDetails = () => {
         console.log(allPostId); // [3
         setPostIds(allPostId); // [4
         if (!state?.isSelf) {
-          if (response?.userDetails?.followers?.includes(selfUserId)) {
+          if (response?.userDetails?.following?.includes(selfUserId)) {
             setIsFollowing(true);
           }
         }
@@ -95,7 +95,7 @@ const UserProfileDetails = () => {
                 <span className="text-xl font-bold">
                   {userDetails?.username}
                 </span>
-                {!state?.isSelf && (
+                {userDetails?.userId !== selfUserId && (
                   <button
                     className={`${
                       !isFollowing
@@ -104,7 +104,7 @@ const UserProfileDetails = () => {
                     }`}
                     onClick={followHandler}
                   >
-                    Follow
+                    {isFollowing ? "Unfollow" : "Follow"}
                   </button>
                 )}
               </div>

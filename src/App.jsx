@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import HomePage from "./pages/home";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import NotificationPage from "./components/notification-page";
 import Navbar from "./components/navbar";
 import DiscoverPage from "./pages/discover";
@@ -15,38 +15,47 @@ import ProtectedRoute from "./components/protectedRoutes/protectedRoutes";
 import Error404 from "./components/error404";
 import ReactToaster from "./components/hooks/snackbar";
 
-function App() {
+function RoutesComponent() {
+  const location = useLocation();
   const isMobile = useMediaQuery("(max-width: 600px)");
-  const [isSingupOrLogin, setIsSingupOrLogin] = useState(false);
-
-  useEffect(() => {
-    if (
-      window.location.pathname.includes("signup") ||
-      window.location.pathname.includes("login") ||
-      window.location.pathname.includes("forget-password")
-    ) {
-      setIsSingupOrLogin(true);
-    } else {
-      setIsSingupOrLogin(false);
-    }
-  }, [window.location.pathname]);
+  const showNavbars =
+    location.pathname !== "/login" && location.pathname !== "/signup";
 
   return (
-    <BrowserRouter>
-      {!isSingupOrLogin && <Navbar />}
-      {isMobile && !isSingupOrLogin && <BottomNavbar />}
+    <>
+      {showNavbars && <Navbar />}
+      {showNavbars && isMobile && <BottomNavbar />}
       <Routes>
         <Route path="*" element={<Error404 />} />
         <Route
           path="/"
           element={
             <ProtectedRoute>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/notifications" element={<NotificationPage />} />
-                <Route path="/discover" element={<DiscoverPage />} />
-                <Route path="/profile/:userId" element={<ProfilePage />} />
-              </Routes>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <NotificationPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/discover"
+          element={
+            <ProtectedRoute>
+              <DiscoverPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/:userId"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
@@ -54,6 +63,14 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <RoutesComponent />
       <ReactToaster />
     </BrowserRouter>
   );

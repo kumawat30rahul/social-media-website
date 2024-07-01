@@ -14,8 +14,17 @@ notificationRouter.post("/create", async (req, res) => {
   }
 
   try {
+    const notificationObj = await Notification.findOne().sort({ _id: -1 });
+
+    let idNumber = notificationObj
+      ? parseInt(notificationObj.notificationId.slice(1))
+      : 0;
+    idNumber++;
+    const newIdNumber = String(idNumber).padStart(5, "0");
+    const newNotificationId = "N" + newIdNumber;
     const senderUserDetails = await UserDetail.findOne({ userId: senderId });
     const notification = new Notification({
+      notificationId: newNotificationId,
       senderId,
       receiverId,
       postId,
@@ -54,10 +63,10 @@ notificationRouter.get("/get-all/:userId", async (req, res) => {
 });
 
 //change to read
-notificationRouter.patch("/:id", async (req, res) => {
+notificationRouter.patch("/read/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const notification = await Notification.findOne({ receiverId: id });
+    const notification = await Notification.findOne({ notificationId: id });
     if (!notification) {
       return res.status(404).json({ message: "Notification not found" });
     }
@@ -74,7 +83,7 @@ notificationRouter.patch("/:id", async (req, res) => {
 });
 
 //delete notification
-notificationRouter.delete("/:id", async (req, res) => {
+notificationRouter.delete("/delete/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const notification = await Notification.findOne({ receiverId: id });

@@ -4,11 +4,21 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useNavigate } from "react-router-dom";
 import { getAllNotifications } from "../../config/services";
 import { memo, useEffect, useState } from "react";
+import NotificationMenu from "./notificationMenu";
 
 const NotificationPage = memo(() => {
   const userId = localStorage.getItem("userId");
   const [allNotifications, setAllNotifications] = useState([]);
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const openNotificationMenu = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const closeNotificationMenu = () => {
+    setAnchorEl(null);
+  };
 
   const navigateToNotifications = (notification) => {
     navigate("/notifications", { state: { notification: notification } });
@@ -43,8 +53,8 @@ const NotificationPage = memo(() => {
             >
               <div className="flex items-center gap-2">
                 <Avatar
-                  src={notification.userimage}
-                  alt={notification.senderName}
+                  src={notification?.userimage}
+                  alt={notification?.senderName}
                   sx={{
                     width: 45,
                     height: 45,
@@ -52,15 +62,22 @@ const NotificationPage = memo(() => {
                 />
                 <div className="">
                   <span className="font-bold mr-2">
-                    {notification.senderUsername}
+                    {notification?.senderUsername}
                   </span>
-                  <span>{notification.notifications}</span>
+                  <span>{notification?.notifications}</span>
                 </div>
               </div>
               <div>
-                <IconButton>
+                <IconButton onClick={openNotificationMenu}>
                   <MoreHorizIcon sx={{ color: "white" }} />
                 </IconButton>
+                <NotificationMenu
+                  anchorEll={anchorEl}
+                  handleClose={closeNotificationMenu}
+                  notificationId={notification?.notificationId}
+                  setAllNotifications={setAllNotifications}
+                  allNotifications={allNotifications}
+                />
               </div>
             </div>
             <Divider

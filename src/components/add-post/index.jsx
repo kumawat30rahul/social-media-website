@@ -5,7 +5,7 @@ import { createPost, uploadingImage } from "../../config/services";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ReactToaster, { useSnackbar } from "../hooks/snackbar";
 
-const AddPost = memo(() => {
+const AddPost = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [caption, setCaption] = useState("");
   const userId = localStorage.getItem("userId");
@@ -15,6 +15,8 @@ const AddPost = memo(() => {
     console.log(event);
     setSelectedImage(event.target.files[0]);
   };
+
+  console.log({ selectedImage });
 
   const removeSelectedImage = () => {
     setSelectedImage(null);
@@ -106,6 +108,6 @@ const AddPost = memo(() => {
       </div>
     </div>
   );
-});
+};
 
 export default AddPost;

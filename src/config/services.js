@@ -1,5 +1,10 @@
 // import EnvConfig from "./envConfig";
-import { getRequest, postImageRequest, postRequest } from "./serviceConfig";
+import {
+  getRequest,
+  patchRequest,
+  postImageRequest,
+  postRequest,
+} from "./serviceConfig";
 // import process from "process";
 
 const METHOD = {
@@ -12,7 +17,6 @@ const METHOD = {
 
 // const envBaseUrl = EnvConfig().envBaseurl;
 const envBaseUrl = import.meta.env.VITE_PROD_URL;
-console.log("envBaseUrl", envBaseUrl);
 
 export const createUserAccount = (payload) => {
   const url = `${envBaseUrl}/user/register`;
@@ -122,4 +126,8 @@ export const registerUser = (payload) => {
 export const userLogin = (payload) => {
   const url = `${envBaseUrl}/user/login`;
   return postRequest(url, payload);
+};
+export const changeNotificationStatus = (notificationId) => {
+  const url = `${envBaseUrl}/notification/read/${notificationId}`;
+  return patchRequest(url);
 };

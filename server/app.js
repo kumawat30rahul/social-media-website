@@ -34,7 +34,6 @@ const corsoptions = {
   optionsSuccessStatus: 204,
 };
 app.use((req, res, next) => {
-  console.log("Request Origin:", req.headers.origin);
   next();
 });
 app.use(cors(corsoptions));

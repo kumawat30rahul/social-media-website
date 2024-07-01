@@ -4,6 +4,7 @@ const UserDetail = require("../models/userDetail");
 const Notification = require("../models/notification");
 const cloudinary = require("../utils/cloudinary");
 const upload = require("../middlewares/multer");
+const axios = require("axios");
 
 const postRouter = express.Router();
 
@@ -135,21 +136,29 @@ postRouter.post("/update-like", async (req, res) => {
         (id) => id !== likedUserId
       );
     } else {
-      const notification = new Notification({
+      const notification = {
         senderId: likedUserId,
         receiverId: post?.userId,
         postId: postId,
         notifications: "liked your post",
         senderUsername: userDetails?.username,
         senderName: userDetails?.name,
-      });
+      };
+      console.log(process.env.VITE_PROD_URL);
+      axios
+        .post(`${process.env.VITE_PROD_URL}/notification/create`, notification)
+        .then((response) => {
+          console.log("Notification created successfully");
+        })
+        .catch((error) => {
+          console.log("Notification not created successfully");
+        });
 
       userDetails?.likedPosts?.push(postId);
       post?.likes?.push(likedUserId);
-      await notification.save();
+      // await notification.save();
     }
 
-    console.log({ post, userDetails });
     await userDetails.save();
     await post.save();
     return res.status(200).json({ message: "Post Like updated Successfully" });

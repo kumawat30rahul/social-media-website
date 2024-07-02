@@ -1,5 +1,6 @@
 // import EnvConfig from "./envConfig";
 import {
+  deleteRequest,
   getRequest,
   patchRequest,
   postImageRequest,
@@ -110,7 +111,7 @@ export const getPostsByIds = (payload) => {
 
 export const followUser = (payload) => {
   const url = `${envBaseUrl}/user/follow`;
-  return postRequest(url, payload);
+  return patchRequest(url, payload);
 };
 
 export const checkUsername = (payload) => {
@@ -130,4 +131,14 @@ export const userLogin = (payload) => {
 export const changeNotificationStatus = (notificationId) => {
   const url = `${envBaseUrl}/notification/read/${notificationId}`;
   return patchRequest(url);
+};
+
+export const deleteNotification = (notificationId) => {
+  const url = `${envBaseUrl}/notification/delete/${notificationId}`;
+  return deleteRequest(url);
+};
+
+export const getAllFollowers = (userId) => {
+  const url = `${envBaseUrl}/user/get-all-followers/${userId}`;
+  return getRequest(url);
 };

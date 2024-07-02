@@ -86,7 +86,7 @@ notificationRouter.patch("/read/:id", async (req, res) => {
 notificationRouter.delete("/delete/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const notification = await Notification.findOne({ receiverId: id });
+    const notification = await Notification.findOne({ notificationId: id });
     if (!notification) {
       return res.status(404).json({ message: "Notification not found" });
     }

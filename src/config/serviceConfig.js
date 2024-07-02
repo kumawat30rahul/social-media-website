@@ -15,6 +15,10 @@ const imageHeaders = {
   "Content-Type": "multipart/form-data",
 };
 
+const deleteHeaders = {
+  "Content-Type": "application/json",
+};
+
 export const getRequest = async (url) => {
   return new Promise((resolve, reject) => {
     axios
@@ -59,6 +63,19 @@ export const patchRequest = async (url, data) => {
   return new Promise((resolve, reject) => {
     axios
       .patch(url, data, { headers: { ...patchHeaders } })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+export const deleteRequest = async (url) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(url, { headers: { ...deleteHeaders } })
       .then((response) => {
         resolve(response.data);
       })

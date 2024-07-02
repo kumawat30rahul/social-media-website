@@ -33,7 +33,7 @@ const UserProfileDetails = () => {
         console.log(allPostId); // [3
         setPostIds(allPostId); // [4
         if (!state?.isSelf) {
-          if (response?.userDetails?.following?.includes(selfUserId)) {
+          if (response?.userDetails?.followers?.includes(selfUserId)) {
             setIsFollowing(true);
           }
         }
@@ -63,6 +63,7 @@ const UserProfileDetails = () => {
     followUser(payload)
       .then((res) => {
         console.log(res);
+        setIsFollowing(true);
       })
       .catch((err) => {
         console.log(err);

@@ -10,6 +10,7 @@ const UserDetail = require("../models/userDetail");
 const Notification = require("../models/notification");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { default: axios } = require("axios");
 
 const userRoutes = express.Router();
 
@@ -371,14 +372,23 @@ userRoutes.patch("/follow", async (req, res) => {
     } else {
       user.following.push(followId);
       followUser.followers.push(userId);
-      const notification = new Notification({
+
+      const notification = {
         senderId: userId,
         receiverId: followId,
         notifications: "started following you",
+        senderUsername: user?.username,
+        senderName: user?.name,
         isRead: false,
-      });
-
-      await notification.save();
+      };
+      axios
+        .post(`${process.env.VITE_PROD_URL}/notification/create`, notification)
+        .then((response) => {
+          console.log("Notification created successfully");
+        })
+        .catch((error) => {
+          console.log("Notification not created successfully");
+        });
     }
 
     await user.save();
@@ -389,6 +399,29 @@ userRoutes.patch("/follow", async (req, res) => {
       .json({ message: "User followed successfully", status: "success" });
   } catch (error) {
     console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error });
+  }
+});
+
+//get all followers
+userRoutes.get("/get-all-followers/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  if (!userId) {
+    return res
+      .status(400)
+      .json({ message: "Invalid user ID", status: "error" });
+  }
+
+  try {
+    const user = await UserDetail.findOne({ userId });
+    console.log(user);
+    const allFollowers = user.following;
+
+    return res.status(200).json({ allFollowers, status: "success" });
+  } catch (error) {
     return res
       .status(500)
       .json({ message: "Internal server error", error: error });

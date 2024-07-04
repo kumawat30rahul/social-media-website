@@ -48,8 +48,10 @@ notificationRouter.post("/create", async (req, res) => {
 // Get all notifications
 notificationRouter.get("/get-all/:userId", async (req, res) => {
   const { userId } = req.params;
+  console.log(userId);
   try {
     const notifications = await Notification.find({ receiverId: userId });
+    console.log(notifications);
     return res.status(200).json({
       notifications,
       status: "success",
@@ -83,14 +85,19 @@ notificationRouter.patch("/read/:id", async (req, res) => {
 });
 
 //delete notification
-notificationRouter.delete("/delete/:id", async (req, res) => {
-  const { id } = req.params;
+notificationRouter.post("/delete", async (req, res) => {
+  console.log(req.body);
+  const { id } = req.body;
   try {
-    const notification = await Notification.findOne({ notificationId: id });
+    const notification = await Notification.findOneAndDelete({
+      notificationId: id,
+    });
     if (!notification) {
       return res.status(404).json({ message: "Notification not found" });
     }
-    await notification.delete();
+    console.log("asdhfa", { notification });
+    //remove gthe object from the database
+
     return res
       .status(200)
       .json({ message: "Notification deleted successfully" });

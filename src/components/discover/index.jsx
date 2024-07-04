@@ -3,13 +3,27 @@ import { useEffect, useState } from "react";
 import "./discover.css";
 import { fetchAllPosts, getAllUsers } from "../../config/services";
 import { useNavigate } from "react-router-dom";
+import PostPopup from "../post/post-pop-up";
 
 const Discover = () => {
   const selfUserId = localStorage.getItem("userId");
   const [isSelf, setIsSelf] = useState(false); // [1
   const [allPosts, setAllPosts] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [openPostDetails, setOpenPostDetails] = useState(false);
+  const [discoveredPostId, setDiscoveredPostId] = useState(""); // [2]
+  const [discoveredUserId, setDiscoveredUserId] = useState(""); // [3]
   const navigate = useNavigate();
+
+  const handlePostModalOpening = (item) => {
+    setOpenPostDetails(true);
+    setDiscoveredPostId(item?.postId);
+    setDiscoveredUserId(item?.userId);
+  };
+
+  const handlePostModalClosing = () => {
+    setOpenPostDetails(false);
+  };
 
   const fetchingAllUsers = () => {
     getAllUsers()
@@ -106,11 +120,18 @@ const Discover = () => {
           <div
             key={index}
             className="bg-primary w-full h-auto aspect-square cursor-pointer"
+            onClick={() => handlePostModalOpening(item)}
           >
             <img src={item?.image} className="w-full h-full object-cover" />
           </div>
         ))}
       </div>
+      <PostPopup
+        open={openPostDetails}
+        handleCloseFunc={handlePostModalClosing}
+        postId={discoveredPostId}
+        userId={discoveredUserId}
+      />
     </div>
   );
 };

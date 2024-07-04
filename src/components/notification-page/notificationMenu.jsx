@@ -4,7 +4,7 @@ import {
   deleteNotification,
 } from "../../config/services";
 import { useSnackbar } from "../hooks/snackbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const NotificationMenu = ({
   anchorEll,
@@ -13,28 +13,32 @@ const NotificationMenu = ({
   userId,
   setAllNotifications,
   allNotifications,
+  notification,
+  index,
 }) => {
   const showSnackbar = useSnackbar();
-  const [everyNtification, setEveryNotification] = useState(allNotifications);
+  const [everyNtification, setEveryNotification] = useState();
+  useEffect(() => {
+    if (notification) setEveryNotification(notification);
+  }, [notification]);
   const readNotification = () => {
-    const changedNotifications = allNotifications.map((item) => {
-      if (item?.notificationId === notificationId) {
+    const changedNotifications = notification.map((item) => {
+      if (item?.notificationId === notification[index]?.notificationId) {
         item.isRead = true;
       }
 
       return item;
     });
+    console.log(changedNotifications);
 
     setAllNotifications(changedNotifications);
-
-    changeNotificationStatus(notificationId)
+    changeNotificationStatus(notification[index]?.notificationId)
       .then((response) => {
-        console.log(response);
+        handleClose();
       })
       .catch((error) => {
-        console.log(error);
-        const changedNotifications = allNotifications.map((item) => {
-          if (item?.receiverId === notificationId) {
+        const changedNotifications = notification.map((item) => {
+          if (item?.receiverId === notification[index]?.notificationId) {
             item.isRead = false;
           }
 
@@ -46,18 +50,21 @@ const NotificationMenu = ({
   };
 
   const deleteNotificationFunc = () => {
-    const changedNotifications = everyNtification.filter(
-      (item) => item?.notificationId !== notificationId
+    const changedNotifications = notification.filter(
+      (item) => item?.notificationId !== notification[index]?.notificationId
     );
-
+    console.log(changedNotifications);
     setAllNotifications(changedNotifications);
-    deleteNotification(notificationId)
+    const payload = {
+      id: notification[index]?.notificationId,
+    };
+    deleteNotification(payload)
       .then((response) => {
-        console.log(response);
+        handleClose();
       })
       .catch((error) => {
-        console.log(error);
         showSnackbar("Failed to delete notification", "error");
+        console.log(everyNtification);
         setAllNotifications(everyNtification);
       });
   };

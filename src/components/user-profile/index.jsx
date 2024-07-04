@@ -63,7 +63,11 @@ const UserProfileDetails = () => {
     followUser(payload)
       .then((res) => {
         console.log(res);
-        setIsFollowing(true);
+        if(res?.didFollow){
+          setIsFollowing(true);
+        }else{
+          setIsFollowing(false)
+        }
       })
       .catch((err) => {
         console.log(err);

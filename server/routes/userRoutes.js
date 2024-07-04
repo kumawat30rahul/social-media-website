@@ -364,11 +364,13 @@ userRoutes.patch("/follow", async (req, res) => {
         .json({ message: "Follow user not found", status: "error" });
     }
 
+    let followed;
     if (user?.following?.includes(followId)) {
       const followingIndex = user.following.indexOf(followId);
       user.following.splice(followingIndex, 1);
       const followerIndex = followUser.followers.indexOf(userId);
       followUser.followers.splice(followerIndex, 1);
+      followed = false;
     } else {
       user.following.push(followId);
       followUser.followers.push(userId);
@@ -384,19 +386,22 @@ userRoutes.patch("/follow", async (req, res) => {
       axios
         .post(`${process.env.VITE_PROD_URL}/notification/create`, notification)
         .then((response) => {
-          console.log("Notification created successfully");
+          console.log("Notification created successfully", { response });
         })
         .catch((error) => {
-          console.log("Notification not created successfully");
+          console.log("Notification not created successfully", { error });
         });
+      followed = true;
     }
 
     await user.save();
     await followUser.save();
 
-    return res
-      .status(200)
-      .json({ message: "User followed successfully", status: "success" });
+    return res.status(200).json({
+      message: "User followed successfully",
+      status: "success",
+      didFollow: followed,
+    });
   } catch (error) {
     console.log(error);
     return res

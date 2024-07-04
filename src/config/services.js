@@ -133,9 +133,9 @@ export const changeNotificationStatus = (notificationId) => {
   return patchRequest(url);
 };
 
-export const deleteNotification = (notificationId) => {
-  const url = `${envBaseUrl}/notification/delete/${notificationId}`;
-  return deleteRequest(url);
+export const deleteNotification = (payload) => {
+  const url = `${envBaseUrl}/notification/delete`;
+  return postRequest(url, payload);
 };
 
 export const getAllFollowers = (userId) => {

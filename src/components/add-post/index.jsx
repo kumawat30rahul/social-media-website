@@ -1,7 +1,11 @@
 import { Avatar, CircularProgress } from "@mui/material";
 import PermMediaIcon from "@mui/icons-material/PermMedia";
 import { memo, useEffect, useState } from "react";
-import { createPost, uploadingImage } from "../../config/services";
+import {
+  createPost,
+  getUserDetails,
+  uploadingImage,
+} from "../../config/services";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ReactToaster, { useSnackbar } from "../hooks/snackbar";
 
@@ -9,6 +13,7 @@ const AddPost = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [caption, setCaption] = useState("");
   const userId = localStorage.getItem("userId");
+  const [profilePic, setProfilePic] = useState("");
   const showSnackbar = useSnackbar();
   const [postLoading, setPostLoading] = useState(false);
   const handleFileChange = (event) => {
@@ -16,7 +21,16 @@ const AddPost = () => {
     setSelectedImage(event.target.files[0]);
   };
 
-  console.log({ selectedImage });
+  const fetchUserDetails = () => {
+    getUserDetails(userId)
+      .then((res) => {
+        console.log(res);
+        setProfilePic(res?.userDetails?.profilePicture);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const removeSelectedImage = () => {
     setSelectedImage(null);
@@ -44,10 +58,14 @@ const AddPost = () => {
         setPostLoading(false);
       });
   };
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
   return (
     <div className="bg-gray-700 sm:bg-primary sm:rounded-xl p-4">
       <div className="flex items-center gap-2">
-        <Avatar />
+        <Avatar src={profilePic} />
         <div className="w-full">
           <input
             type="text"

@@ -11,6 +11,8 @@ const Notification = require("../models/notification");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { default: axios } = require("axios");
+const upload = require("../middlewares/multer");
+const cloudinary = require("../utils/cloudinary");
 
 const userRoutes = express.Router();
 
@@ -432,5 +434,55 @@ userRoutes.get("/get-all-followers/:userId", async (req, res) => {
       .json({ message: "Internal server error", error: error });
   }
 });
+
+//upload image
+userRoutes.post(
+  "/upload-image",
+  upload.single("mediaLink"),
+  async (req, res) => {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ message: "Invalid user ID", status: "error" });
+    }
+
+    try {
+      let imageLink;
+      try {
+        const result = await cloudinary.uploader.upload(req?.file.path);
+        console.log(result);
+        imageLink = result.secure_url;
+      } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+          message: "Internal Server Error from cloudinary",
+          error: error,
+        });
+      }
+      const user = await UserDetail.findOne({ userId });
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: "User not found", status: "error" });
+      }
+
+      user.profilePicture = imageLink;
+
+      await user.save();
+
+      return res.status(200).json({
+        message: "Image uploaded successfully",
+        status: "success",
+      });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Internal server error", error: error });
+    }
+  }
+);
 
 module.exports = userRoutes;

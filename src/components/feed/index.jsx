@@ -3,7 +3,7 @@ import "./feed.css";
 import AddPost from "../add-post";
 import FeedPost from "../post";
 import { getAllFollowers, getAllPosts } from "../../config/services";
-import { Button, Divider, Modal } from "@mui/material";
+import { Button, CircularProgress, Divider, Modal } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 // import PostSkeleton from "../loaders/postSkeletonLoader";
 
@@ -28,14 +28,18 @@ const Feed = () => {
       });
   };
 
+  const [postsLoader, setPostsLoader] = useState(true);
   const getAllUserPosts = () => {
+    setPostsLoader(true);
     getAllPosts(userId)
       .then((response) => {
         console.log(response);
         setPosts(response?.postData);
+        setPostsLoader(false);
       })
       .catch((error) => {
         console.log(error);
+        setPostsLoader(false);
       });
   };
 
@@ -77,10 +81,14 @@ const Feed = () => {
         />
       </div>
       <div className="w-full h-auto mt-0 md:mt-3">
-        {posts?.map((post, index) => (
-          <FeedPost key={index} post={post} />
-        ))}
-        {posts.length === 0 && (
+        {postsLoader ? (
+          <div className="w-full h-32 flex items-center justify-center">
+            <CircularProgress />
+          </div>
+        ) : (
+          posts?.map((post, index) => <FeedPost key={index} post={post} />)
+        )}
+        {posts.length === 0 && !postsLoader && (
           <div className="w-full h-auto flex justify-center items-center">
             <p className="text-white">No posts to show</p>
           </div>

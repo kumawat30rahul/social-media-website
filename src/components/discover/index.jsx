@@ -1,4 +1,4 @@
-import { Avatar, Tooltip } from "@mui/material";
+import { Avatar, CircularProgress, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import "./discover.css";
 import { fetchAllPosts, getAllUsers } from "../../config/services";
@@ -25,7 +25,9 @@ const Discover = () => {
     setOpenPostDetails(false);
   };
 
+  const [userloader, setUserLoader] = useState(true); // [4]
   const fetchingAllUsers = () => {
+    setUserLoader(true);
     getAllUsers()
       .then((response) => {
         console.log(response);
@@ -45,6 +47,7 @@ const Discover = () => {
             }
           });
         setAllUsers(userData);
+        setUserLoader(false);
         if (userData.find((user) => user.userId === selfUserId)) {
           setIsSelf(true);
         }
@@ -53,7 +56,9 @@ const Discover = () => {
         console.log(error);
       });
   };
+  const [postloader, setPostLoader] = useState(true); // [5
   const fetchingAllPosts = () => {
+    setPostLoader(true);
     fetchAllPosts()
       .then((response) => {
         console.log(response);
@@ -65,6 +70,7 @@ const Discover = () => {
           };
         });
         setAllPosts(postArray);
+        setPostLoader(false);
       })
       .catch((error) => {
         console.log(error);
@@ -90,41 +96,53 @@ const Discover = () => {
       <div className="flex items-start flex-col gap-3 w-full">
         <span>Peoples</span>
         <div className="w-full h-auto flex items-center gap-4 overflow-x-scroll py-4 -my-4 scrollbar-style">
-          {allUsers?.map((user, index) => (
-            <div
-              className="flex items-center gap-2 bg-primary rounded-xl p-3 w-auto min-w-60 shrink-0 relative cursor-pointer"
-              onClick={() => userNavigationToProfilePage(user?.userId)}
-            >
-              {user?.isFollowing && (
-                <Tooltip title="Following">
-                  <div className="absolute h-6 w-6 -top-2 -right-2 rounded-full bg-blue-700"></div>
-                </Tooltip>
-              )}
-              <Avatar
-                sx={{
-                  height: 50,
-                  width: 50,
-                }}
-              />
-              <div className="flex flex-col items-start">
-                <span>{user?.userName}</span>
-                <span>{user?.name}</span>
-              </div>
+          {userloader ? (
+            <div className="flex items-center justify-center h-32 w-32">
+              <CircularProgress />
             </div>
-          ))}
+          ) : (
+            allUsers?.map((user, index) => (
+              <div
+                className="flex items-center gap-2 bg-primary rounded-xl p-3 w-auto min-w-60 shrink-0 relative cursor-pointer"
+                onClick={() => userNavigationToProfilePage(user?.userId)}
+              >
+                {user?.isFollowing && (
+                  <Tooltip title="Following">
+                    <div className="absolute h-6 w-6 -top-2 -right-2 rounded-full bg-blue-700"></div>
+                  </Tooltip>
+                )}
+                <Avatar
+                  sx={{
+                    height: 50,
+                    width: 50,
+                  }}
+                />
+                <div className="flex flex-col items-start">
+                  <span>{user?.userName}</span>
+                  <span>{user?.name}</span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
       <span className="mt-4">Posts</span>
       <div className="h-full w-full grid grid-cols-3 gap-1">
-        {allPosts?.map((item, index) => (
-          <div
-            key={index}
-            className="bg-primary w-full h-auto aspect-square cursor-pointer"
-            onClick={() => handlePostModalOpening(item)}
-          >
-            <img src={item?.image} className="w-full h-full object-cover" />
+        {postloader ? (
+          <div className="w-32 h-32 flex items-center justify-center">
+            <CircularProgress />
           </div>
-        ))}
+        ) : (
+          allPosts?.map((item, index) => (
+            <div
+              key={index}
+              className="bg-primary w-full h-auto aspect-square cursor-pointer"
+              onClick={() => handlePostModalOpening(item)}
+            >
+              <img src={item?.image} className="w-full h-full object-cover" />
+            </div>
+          ))
+        )}
       </div>
       <PostPopup
         open={openPostDetails}

@@ -48,13 +48,11 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
             ],
           };
           setPostData(comments);
-          setCommentLength(commentLength + 1);
-          setCommentLoader(false);
           setComment("");
+          setCommentLoader(false);
         });
       })
       .catch((err) => {
-        console.log(err);
         setCommentLoader(false);
       });
   };
@@ -205,6 +203,7 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
               <div className="flex items-center justify-between p-4">
                 <input
                   type="text"
+                  value={comment}
                   placeholder="Add a comment"
                   className="w-full bg-transparent text-white outline-none"
                   onChange={(e) => setComment(e.target.value)}

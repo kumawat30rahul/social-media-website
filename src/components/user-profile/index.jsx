@@ -9,6 +9,7 @@ import {
 } from "../../config/services";
 import PostPopup from "../post/post-pop-up";
 import { useLocation, useParams } from "react-router-dom";
+import AvatarImage from "../home-profile/avatar";
 
 const UserProfileDetails = () => {
   const isMobile = useMediaQuery(`(max-width: 640px)`);
@@ -22,6 +23,9 @@ const UserProfileDetails = () => {
   const { userId } = params;
   const location = useLocation();
   const { state } = location;
+
+  const [discoveredPostId, setDiscoveredPostId] = useState(""); // [3]
+  const [discoveredUserId, setDiscoveredUserId] = useState(""); // [4]
 
   const fetchingUserDetails = () => {
     // Fetch user details
@@ -63,10 +67,10 @@ const UserProfileDetails = () => {
     followUser(payload)
       .then((res) => {
         console.log(res);
-        if(res?.didFollow){
+        if (res?.didFollow) {
           setIsFollowing(true);
-        }else{
-          setIsFollowing(false)
+        } else {
+          setIsFollowing(false);
         }
       })
       .catch((err) => {
@@ -88,11 +92,10 @@ const UserProfileDetails = () => {
         <div className="flex flex-col items-start bg-primary w-full  lg:w-7/12 gap-5 p-4 rounded-xl">
           <div className="flex gap-5">
             <div className="flex flex-col items-start justify-center gap-3">
-              <Avatar
-                sx={{
-                  width: isMobile ? 80 : 120,
-                  height: isMobile ? 80 : 120,
-                }}
+              <AvatarImage
+                profilePitcture={userDetails?.profilePicture}
+                height={isMobile ? 80 : 120}
+                width={isMobile ? 80 : 120}
               />
             </div>
             <div className="flex flex-col gap-3">
@@ -187,12 +190,20 @@ const UserProfileDetails = () => {
               <img
                 src={item?.postMedia?.imageLink}
                 className="h-full w-full object-contain aspect-square cursor-pointer"
-                onClick={() => setOpenPostPopup(true)}
+                onClick={() => {
+                  setDiscoveredPostId(item?.postId);
+                  setOpenPostPopup(true);
+                }}
               />
             ))}
           </div>
         </div>
-        <PostPopup open={openPostPopup} handleCloseFunc={setOpenPostPopup} />
+        <PostPopup
+          open={openPostPopup}
+          handleCloseFunc={() => setOpenPostPopup(false)}
+          postId={discoveredPostId}
+          userId={userDetails?.userId}
+        />
       </div>
     </>
   );

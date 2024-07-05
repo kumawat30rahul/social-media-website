@@ -86,7 +86,7 @@ const Navbar = () => {
               className="h-full w-auto"
             />
           </div>
-          <ClickAwayListener onClickAway={searchCloseHandler}>
+          {/* <ClickAwayListener onClickAway={searchCloseHandler}>
             <div
               className={`h-full w-full ${
                 openSearch ? "sm:w-full" : "sm:w-1/2"
@@ -119,7 +119,7 @@ const Navbar = () => {
                 </IconButton>
               </div>
             </div>
-          </ClickAwayListener>
+          </ClickAwayListener> */}
         </div>
         <div className="flex items-center gap-6">
           <div className={`hidden  ${openSearch ? "sm:hidden" : "sm:block"}`}>

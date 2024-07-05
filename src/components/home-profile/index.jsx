@@ -7,6 +7,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import { getAllNotifications, getUserDetails } from "../../config/services";
 import { useEffect, useMemo, useState } from "react";
 import ActivityPostPopup from "../post/activity-modal";
+import AvatarImage from "./avatar";
 
 const HomeProfile = () => {
   const [userDetails, setUserDetails] = useState();
@@ -72,7 +73,11 @@ const HomeProfile = () => {
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-3 flex-1 h-auto bg-primary rounded-xl pt-8 pb-3">
-      <Avatar sx={{ width: 70, height: 70 }} />
+      <AvatarImage
+        profilePitcture={userDetails?.profilePicture}
+        height={70}
+        width={70}
+      />
       <div className="text-center">
         <p className="font-bold">{userDetails?.name}</p>
         <p className="text-sm">{userDetails?.bio}</p>

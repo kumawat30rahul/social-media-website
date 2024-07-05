@@ -45,6 +45,11 @@ const NotificationPage = memo(() => {
   return (
     <div className="w-full lg:w-11/12  xl:w-9/12 p-2 m-auto  flex items-center justify-center">
       <div className="w-full md:w-7/12 bg-primary rounded-xl overflow-hidden">
+        {allNotifications?.length === 0 && (
+          <div className="flex items-center justify-center h-72">
+            <h1 className="text-white text-2xl">No Notifications</h1>
+          </div>
+        )}
         {allNotifications?.map((notification, index) => {
           return (
             <>
@@ -76,9 +81,6 @@ const NotificationPage = memo(() => {
                   </IconButton>
                 </div>
               </div>
-              {/* <Divider
-                sx={{ backgroundColor: "#484444 !important", width: "100%" }}
-              /> */}
             </>
           );
         })}

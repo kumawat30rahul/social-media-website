@@ -127,7 +127,7 @@ const FeedPost = ({ post, key }) => {
       key={key}
     >
       <div className="flex items-center gap-2">
-        <Avatar src={post?.user?.profilePic} />
+        <Avatar src={post?.user?.profilePicture} />
         <span>{post?.user?.userName}</span>
         <FiberManualRecordIcon sx={{ width: 5, height: 5 }} />
         <span>{formatTimestamp(post?.createDate)}</span>

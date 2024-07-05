@@ -197,6 +197,22 @@ postRouter.post("/update-comment", async (req, res) => {
     }
 
     post.comments.push({ userName: userDetails?.username, comment });
+    const notification = {
+      senderId: commentedUserId,
+      receiverId: post?.userId,
+      postId: postId,
+      notifications: "commented on your post",
+      senderUsername: userDetails?.username,
+      senderName: userDetails?.name,
+    };
+    axios
+      .post(`${process.env.VITE_PROD_URL}/notification/create`, notification)
+      .then((response) => {
+        console.log("Notification created successfully");
+      })
+      .catch((error) => {
+        console.log("Notification not created successfully");
+      });
 
     await post.save();
     return res
@@ -240,15 +256,22 @@ postRouter.post("/save-post", async (req, res) => {
       return res.status(200).json({ message: "Post unsaved successfully" });
     } else {
       userDetails.savedPosts.push(postId);
-      const notification = new Notification({
+      const notification = {
         senderId: userId,
         receiverId: post?.userId,
         postId: postId,
         notifications: "saved your post",
         senderUsername: userDetails?.username,
         senderName: userDetails?.name,
-      });
-      await notification.save();
+      };
+      axios
+        .post(`${process.env.VITE_PROD_URL}/notification/create`, notification)
+        .then((response) => {
+          console.log("Notification created successfully");
+        })
+        .catch((error) => {
+          console.log("Notification not created successfully");
+        });
       await userDetails.save();
       return res.status(200).json({ message: "Post saved successfully" });
     }
@@ -286,7 +309,7 @@ postRouter.get("/get-all/:userId", async (req, res) => {
           user: {
             userId: user?.userId || "NA",
             userName: user?.username || "NA",
-            profilePic: user?.profilePic || "NA",
+            profilePicture: user?.profilePicture || "NA",
             savedPosts: user?.savedPosts || [],
           },
         };
@@ -351,15 +374,22 @@ postRouter.post("/share-post", async (req, res) => {
     }
 
     for (let i = 0; i < sharedUserId?.length; i++) {
-      const notification = new Notification({
+      const notification = {
         senderId: userId,
         receiverId: sharedUserId[i],
         postId: postId,
         notifications: "shared a post with you",
         senderUsername: user?.username,
         senderName: user?.name,
-      });
-      await notification.save();
+      };
+      axios
+        .post(`${process.env.VITE_PROD_URL}/notification/create`, notification)
+        .then((response) => {
+          console.log("Notification created successfully");
+        })
+        .catch((error) => {
+          console.log("Notification not created successfully");
+        });
     }
 
     user?.sharedPosts?.push(postId);

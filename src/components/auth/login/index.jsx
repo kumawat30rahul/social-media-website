@@ -12,7 +12,7 @@ const LoginPage = () => {
   const [loginLoading, setLoginLoading] = useState(false);
 
   const navigateToForgetPassword = (e) => {
-    navigate("/forget-password");
+    navigate("/signup");
   };
 
   const loginHandler = async (e) => {
@@ -58,7 +58,7 @@ const LoginPage = () => {
               className="text-blue-500 m-2 text-start w-full text-xs cursor-pointer"
               onClick={navigateToForgetPassword}
             >
-              Forget Password?
+              Dont have an account? Sign Up
             </p>
             <button
               className="w-full h-10 rounded-lg bg-white text-primary"

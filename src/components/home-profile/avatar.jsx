@@ -1,10 +1,20 @@
-import { Avatar, Box, IconButton, Modal } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  CircularProgress,
+  IconButton,
+  Modal,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PermMediaIcon from "@mui/icons-material/PermMedia";
 import { useEffect, useState } from "react";
+import { uploadProfileImage } from "../../config/services";
+import { useSnackbar } from "../hooks/snackbar";
 
-const AvatarImage = ({ profilePitcture, height, width }) => {
+const AvatarImage = ({ profilePitcture, height, width, setReloadChanges }) => {
   const [open, setOpen] = useState(false);
+  const userId = localStorage.getItem("userId");
+  const showSnackbar = useSnackbar();
   const [uploadedImage, setUploadedImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const handleFileChange = (event) => {
@@ -29,6 +39,26 @@ const AvatarImage = ({ profilePitcture, height, width }) => {
       setUploadedImage(URL.createObjectURL(selectedImage));
     }
   }, [selectedImage]);
+
+  const [uploadImageLoader, setUploadImageLoader] = useState(false);
+  const uploadingImage = () => {
+    setUploadImageLoader(true);
+    const formData = new FormData();
+    formData.append("mediaLink", selectedImage);
+    formData.append("userId", userId);
+    uploadProfileImage(formData)
+      .then((res) => {
+        setUploadImageLoader(false);
+        showSnackbar("Successfully Uploaded", "success");
+        // setReloadChanges(true);
+        setOpen(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        showSnackbar("Something went wrong while uploading image", "error");
+        setUploadImageLoader(false);
+      });
+  };
   return (
     <div className="relative">
       <IconButton
@@ -72,8 +102,19 @@ const AvatarImage = ({ profilePitcture, height, width }) => {
                 style={{ display: "none" }}
                 id="file-upload-pic"
               />
-              <button className="bg-blue-400 py-2 px-3 rounded-full mt-5">
-                Upload
+              <button
+                className="bg-blue-400 py-2 px-3 rounded-full mt-5"
+                onClick={uploadingImage}
+                disabled={uploadImageLoader || !selectedImage}
+              >
+                {uploadImageLoader ? (
+                  <CircularProgress
+                    size={18}
+                    sx={{ color: "white !important" }}
+                  />
+                ) : (
+                  "Upload"
+                )}
               </button>
             </div>
           </div>

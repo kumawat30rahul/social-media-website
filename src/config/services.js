@@ -142,3 +142,8 @@ export const getAllFollowers = (userId) => {
   const url = `${envBaseUrl}/user/get-all-followers/${userId}`;
   return getRequest(url);
 };
+
+export const uploadProfileImage = (payload) => {
+  const url = `${envBaseUrl}/user/upload-image`;
+  return postImageRequest(url, payload);
+};

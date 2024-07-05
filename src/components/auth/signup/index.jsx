@@ -106,6 +106,10 @@ const SingupPage = () => {
     }
   };
 
+  const navigateToForgetPassword = () => {
+    navigate("/login");
+  };
+
   return (
     <div className="h-screen w-screen m-auto flex justify-center items-center">
       <div className="h-scree w-96 rounded-lg bg-primary  ">
@@ -159,6 +163,12 @@ const SingupPage = () => {
               className="w-full h-10 pl-2 rounded-lg bg-primary text-white border border-gray-500 mt-4"
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
+            <p
+              className="text-blue-500 m-2 text-start w-full text-xs cursor-pointer"
+              onClick={navigateToForgetPassword}
+            >
+              Already have an account? Login
+            </p>
             <button className="w-full h-10 rounded-lg bg-white text-primary mt-4">
               {registrationLoader ? (
                 <CircularProgress

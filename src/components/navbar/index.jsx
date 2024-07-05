@@ -2,11 +2,13 @@ import { useMemo, useState } from "react";
 import "./navbar.css";
 import {
   Avatar,
+  Box,
   ClickAwayListener,
   Divider,
   IconButton,
   Menu,
   MenuItem,
+  Modal,
 } from "@mui/material";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
@@ -17,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const userId = localStorage.getItem("userId");
   const [openSearch, setOpenSearch] = useState(false);
+  const [logoutModal, setLogoutModal] = useState(false);
   const navigation = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -33,6 +36,13 @@ const Navbar = () => {
 
   const searchCloseHandler = () => {
     setOpenSearch(false);
+  };
+
+  const handleOpenModal = () => {
+    setLogoutModal(true);
+  };
+  const handleCloseModal = () => {
+    setLogoutModal(false);
   };
 
   const navItems = useMemo(
@@ -68,8 +78,21 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    navigation("/logout");
-    handleClose();
+    localStorage.clear();
+    handleCloseModal();
+    navigation("/login");
+  };
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "75%",
+    height: "auto",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   };
 
   return (
@@ -171,10 +194,31 @@ const Navbar = () => {
         <MenuItem onClick={handleProfile}>
           <span className="text-sm">Profile</span>
         </MenuItem>
-        <MenuItem onClick={handleLogout}>
+        <MenuItem onClick={handleOpenModal}>
           <span className="text-sm">Log Out</span>
         </MenuItem>
       </Menu>
+      <Modal open={logoutModal} onClose={handleCloseModal}>
+        <Box sx={style}>
+          <div className="bg-primary w-60 h-20 rounded-lg flex flex-col items-center justify-center border-2 ">
+            <span className="text-sm">Are you sure you want to logout?</span>
+            <div className="flex gap-2 mt-2">
+              <button
+                className="bg-red-400 py-1 px-2 rounded-lg"
+                onClick={handleLogout}
+              >
+                Yes
+              </button>
+              <button
+                className="bg-green-400 py-1 px-2 rounded-lg"
+                onClick={handleCloseModal}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };

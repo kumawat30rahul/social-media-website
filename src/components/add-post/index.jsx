@@ -7,7 +7,7 @@ import {
   uploadingImage,
 } from "../../config/services";
 import CancelIcon from "@mui/icons-material/Cancel";
-import ReactToaster, { useSnackbar } from "../hooks/snackbar";
+import { useSnackbar } from "../hooks/snackbar";
 
 const AddPost = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -50,6 +50,7 @@ const AddPost = () => {
       .then((res) => {
         console.log(res);
         showSnackbar(res?.message, "success");
+        setCaption("");
         setSelectedImage(null);
         setPostLoading(false);
       })
@@ -70,6 +71,7 @@ const AddPost = () => {
           <input
             type="text"
             name="image"
+            value={caption}
             placeholder="What's on your mind?"
             className="w-full p-2 px-2 rounded-full bg-transparent border border-gray-500 outline-none"
             onChange={(e) => setCaption(e.target.value)}

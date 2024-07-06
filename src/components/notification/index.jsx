@@ -24,7 +24,7 @@ const Notification = () => {
     getAllNotifications(userId)
       .then((response) => {
         console.log(response);
-        setAllNotifications(response?.notifications);
+        setAllNotifications(response?.newNotifications);
       })
       .catch((error) => {
         console.log(error);
@@ -47,7 +47,7 @@ const Notification = () => {
             onClick={() => navigateToNotifications(notification)}
           >
             <Avatar
-              src={notification?.image}
+              src={notification?.senderImage}
               alt={notification?.senderName}
               className="w-8 h-8 rounded-full"
             />

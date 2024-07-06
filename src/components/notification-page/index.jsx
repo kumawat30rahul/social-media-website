@@ -36,7 +36,7 @@ const NotificationPage = memo(() => {
     getAllNotifications(userId)
       .then((response) => {
         console.log(response);
-        setAllNotifications(response?.notifications);
+        setAllNotifications(response?.newNotifications);
       })
       .catch((error) => {
         console.log(error);
@@ -61,7 +61,7 @@ const NotificationPage = memo(() => {
               >
                 <div className="flex items-center gap-2">
                   <Avatar
-                    src={notification?.userimage}
+                    src={notification?.senderImage}
                     alt={notification?.senderName}
                     sx={{
                       width: 45,

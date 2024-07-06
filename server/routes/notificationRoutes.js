@@ -48,12 +48,30 @@ notificationRouter.post("/create", async (req, res) => {
 // Get all notifications
 notificationRouter.get("/get-all/:userId", async (req, res) => {
   const { userId } = req.params;
-  console.log(userId);
   try {
     const notifications = await Notification.find({ receiverId: userId });
-    console.log(notifications);
+    const userIds = notifications.map((notification) => notification.senderId);
+    const userDetails = await UserDetail.find({ userId: { $in: userIds } });
+
+    const newNotifications = notifications.map((notification) => {
+      const userDetail = userDetails.find(
+        (userDetail) => userDetail.userId === notification.senderId
+      );
+      return {
+        notificationId: notification.notificationId,
+        senderId: notification.senderId,
+        receiverId: notification.receiverId,
+        postId: notification.postId,
+        notifications: notification.notifications,
+        isRead: notification.isRead,
+        senderUsername: userDetail.username,
+        senderName: userDetail.name,
+        senderImage: userDetail.profilePicture,
+      };
+    });
+
     return res.status(200).json({
-      notifications,
+      newNotifications,
       status: "success",
       message: "Notifications fetched successfully",
     });
@@ -95,9 +113,6 @@ notificationRouter.post("/delete", async (req, res) => {
     if (!notification) {
       return res.status(404).json({ message: "Notification not found" });
     }
-    console.log("asdhfa", { notification });
-    //remove gthe object from the database
-
     return res
       .status(200)
       .json({ message: "Notification deleted successfully" });

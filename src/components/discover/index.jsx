@@ -150,7 +150,7 @@ const Discover = () => {
         open={openPostDetails}
         handleCloseFunc={handlePostModalClosing}
         postId={discoveredPostId}
-        userId={selfUserId}
+        userId={discoveredUserId}
       />
     </div>
   );

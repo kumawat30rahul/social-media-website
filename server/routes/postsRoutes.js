@@ -425,8 +425,25 @@ postRouter.post("/get-posts-by-ids", async (req, res) => {
 
   try {
     const posts = await Post.find({ postId: { $in: postIds } });
+    const postUserId = posts.map((post) => post.userId);
+    const alluserDetails = await UserDetail.find({
+      userId: { $in: postUserId },
+    });
+    const newPosts = posts.map((post) => {
+      const user = alluserDetails.find((user) => user.userId === post.userId);
+      return {
+        ...post._doc,
+        comments: post.comments.map((comment) => {
+          return {
+            userName: comment.userName,
+            comment: comment.comment,
+            userProfilePicture: user?.profilePicture || "NA",
+          };
+        }),
+      };
+    });
 
-    return res.status(200).json({ posts });
+    return res.status(200).json({ posts: newPosts });
   } catch (error) {
     return res
       .status(500)

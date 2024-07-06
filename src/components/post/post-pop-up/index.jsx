@@ -15,6 +15,7 @@ import {
 } from "../../../config/services";
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import { useNavigate } from "react-router-dom";
 
 const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
   const [postData, setPostData] = useState([]); // [1
@@ -22,21 +23,21 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
   const [comment, setComment] = useState("");
   const [commentLoader, setCommentLoader] = useState(false);
   const [commentLength, setCommentLength] = useState();
+  const navigate = useNavigate();
+  const selfUserId = localStorage.getItem("userId");
 
   const postComment = (postId) => {
     setCommentLoader(true);
     const payload = {
-      commentedUserId: userId,
+      commentedUserId: selfUserId,
       postId: postData?.postId,
       comment,
     };
 
     updateComment(payload)
       .then((res) => {
-        console.log(res);
         getUserDetails(userId).then((res) => {
           // const comments = res?.
-          console.log(res);
           const comments = {
             ...postData,
             comments: [
@@ -69,11 +70,9 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
     // border: "2px solid #000000",
   };
 
-  console.log("post popup", open, postId, userId);
   const fetchingPostDetails = () => {
     getPostsByIds([postId])
       .then((response) => {
-        console.log(response);
         setPostData(response?.posts?.[0]);
       })
       .catch((error) => {
@@ -99,6 +98,11 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
       fetchingUserDetails();
     }
   }, [open, postId, userId]);
+
+  const userNavigationToProfilePage = (userId) => {
+    navigate(`/profile/${userId}`);
+  };
+
   return (
     <Modal open={open} onClose={() => handleCloseFunc(false)} disableAutoFocus>
       <Box sx={style}>
@@ -111,14 +115,19 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
               <div className="flex items-center justify-between p-2">
                 <div className="flex items-center gap-2">
                   <Avatar
-                    src={userDetails?.profileImage}
+                    src={userDetails?.profilePicture}
                     alt={userDetails?.userName}
                     sx={{
                       width: 38,
                       height: 38,
                     }}
                   />
-                  <div className="flex flex-col items-start">
+                  <div
+                    className="flex flex-col items-start hover:text-blue-800 cursor-pointer"
+                    onClick={() =>
+                      userNavigationToProfilePage(userDetails?.userId)
+                    }
+                  >
                     <span className="text-md text-bold">
                       {userDetails?.username}
                     </span>
@@ -144,7 +153,7 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
               <div className="flex flex-col items-start">
                 <div className="flex items-center gap-2 mb-2">
                   <Avatar
-                    src={userDetails?.profileImage}
+                    src={userDetails?.profilePicture}
                     alt={userDetails?.userName}
                     sx={{
                       width: 38,
@@ -173,7 +182,7 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
                   {postData?.comments?.map((comment, index) => (
                     <div className="flex items-center gap-4" key={index}>
                       <Avatar
-                        src={comment?.userImage}
+                        src={comment?.userProfilePicture}
                         alt={comment?.userName}
                         sx={{
                           width: 38,

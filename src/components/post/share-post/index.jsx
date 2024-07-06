@@ -15,11 +15,7 @@ const SharePost = ({ openModal, closeModal, userId, postId }) => {
     getAllFollwersList(userId)
       .then((res) => {
         console.log(res);
-        setFollowers([
-          ...res?.follwersDetails,
-          ...res?.follwersDetails,
-          ...res?.follwersDetails,
-        ]);
+        setFollowers([...res?.follwersDetails]);
       })
       .catch((error) => {
         setFollowers([]);

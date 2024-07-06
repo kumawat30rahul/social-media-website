@@ -37,10 +37,8 @@ postRouter.post("/create", upload.single("mediaLink"), async (req, res) => {
     let imageLink;
     try {
       const result = await cloudinary.uploader.upload(req?.file.path);
-      console.log(result);
       imageLink = result.secure_url;
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         message: "Internal Server Error from cloudinary",
         error: error,
@@ -144,7 +142,6 @@ postRouter.post("/update-like", async (req, res) => {
         senderUsername: userDetails?.username,
         senderName: userDetails?.name,
       };
-      console.log(process.env.VITE_PROD_URL);
       axios
         .post(`${process.env.VITE_PROD_URL}/notification/create`, notification)
         .then((response) => {
@@ -304,6 +301,7 @@ postRouter.get("/get-all/:userId", async (req, res) => {
           (user) => user.userId === post.userId
         );
 
+        console.log(user);
         return {
           ...post._doc,
           user: {
@@ -425,7 +423,6 @@ postRouter.post("/get-posts-by-ids", async (req, res) => {
     return res.status(400).json({ message: "Invalid postIds" });
   }
 
-  console.log({ postIds });
   try {
     const posts = await Post.find({ postId: { $in: postIds } });
 

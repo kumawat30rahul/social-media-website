@@ -113,9 +113,9 @@ const FeedPost = ({ post, key }) => {
     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
     if (minutesDifference < 60) {
-      return `${minutesDifference}M`;
+      return `${minutesDifference}mins`;
     } else if (hoursDifference < 24) {
-      return `${hoursDifference}H`;
+      return `${hoursDifference}hours`;
     } else {
       return `${daysDifference}D`;
     }

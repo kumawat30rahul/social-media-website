@@ -45,6 +45,7 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
               {
                 userName: res?.userDetails?.username,
                 comment,
+                userProfilePicture: res?.userDetails?.profilePicture,
               },
             ],
           };

@@ -189,7 +189,7 @@ const UserProfileDetails = () => {
             {posts?.map((item, index) => (
               <img
                 src={item?.postMedia?.imageLink}
-                className="h-full w-full object-contain aspect-square cursor-pointer"
+                className="h-full w-full object-cover aspect-square cursor-pointer"
                 onClick={() => {
                   setDiscoveredPostId(item?.postId);
                   setOpenPostPopup(true);

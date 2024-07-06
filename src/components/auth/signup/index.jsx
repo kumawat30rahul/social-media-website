@@ -5,6 +5,8 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import { CircularProgress } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const SingupPage = () => {
   const [name, setName] = useState("");
@@ -15,6 +17,8 @@ const SingupPage = () => {
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [changeInputType, setChangeInputType] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -151,18 +155,43 @@ const SingupPage = () => {
               className="w-full h-10 pl-2 rounded-lg bg-primary text-white border border-gray-500 mt-4"
               onChange={(e) => setEmail(e.target.value)}
             />
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full h-10 pl-2 rounded-lg bg-primary text-white border border-gray-500 mt-4"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              className="w-full h-10 pl-2 rounded-lg bg-primary text-white border border-gray-500 mt-4"
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+            <div className="w-full flex items-center h-auto relative">
+              <input
+                type={`${changeInputType ? "text" : "password"}`}
+                placeholder="Password"
+                className="w-full h-10 pl-2 rounded-lg bg-primary text-white border border-gray-500 mt-4"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <div
+                className="absolute top-5 right-3 cursor-pointer"
+                onClick={() => {
+                  setChangeInputType(!changeInputType);
+                }}
+              >
+                {changeInputType ? <VisibilityOffIcon /> : <RemoveRedEyeIcon />}
+              </div>
+            </div>
+            <div className="w-full flex items-center h-auto relative">
+              <input
+                type={`${isPasswordVisible ? "text" : "password"}`}
+                placeholder="Confirm Password"
+                className="w-full h-10 pl-2 rounded-lg bg-primary text-white border border-gray-500 mt-4"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <div
+                className="absolute top-5 right-3 cursor-pointer"
+                onClick={() => {
+                  setIsPasswordVisible(!isPasswordVisible);
+                }}
+              >
+                {isPasswordVisible ? (
+                  <VisibilityOffIcon />
+                ) : (
+                  <RemoveRedEyeIcon />
+                )}
+              </div>
+            </div>
+
             <p
               className="text-blue-500 m-2 text-start w-full text-xs cursor-pointer"
               onClick={navigateToForgetPassword}

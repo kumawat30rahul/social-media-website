@@ -83,6 +83,10 @@ const Navbar = () => {
     navigation("/login");
   };
 
+  const navigateToHome = () => {
+    navigation("/");
+  };
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -106,7 +110,8 @@ const Navbar = () => {
           <div className="h-full w-auto bg-white p-1 rounded-lg aspect-square">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Avicii_-_Logo.png"
-              className="h-full w-auto"
+              className="h-full w-auto cursor-pointer"
+              onClick={navigateToHome}
             />
           </div>
           {/* <ClickAwayListener onClickAway={searchCloseHandler}>

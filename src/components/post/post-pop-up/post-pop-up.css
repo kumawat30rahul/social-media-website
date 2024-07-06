@@ -12,17 +12,25 @@
 }
 
 .comment-section-popup {
-  width: 30vw;
+  width: 450px;
+  min-width: 400px;
 }
 
 .image-popup {
   height: 100%;
   width: 100%;
-  object-fit: contain;
+  object-fit: cover;
+}
+@media screen and (max-width: 1024px) {
+  .comment-section-popup {
+    width: 300px;
+    min-width: 300px;
+  }
 }
 
 @media screen and (max-width: 768px) {
   .comment-section-popup {
-    width: 35vw;
+    width: 100%;
+    min-width: 100%;
   }
 }

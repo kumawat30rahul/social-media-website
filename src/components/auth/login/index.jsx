@@ -2,9 +2,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { userLogin } from "../../../config/services";
 import { useState } from "react";
 import { CircularProgress } from "@mui/material";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loginDetails, setLoginDetails] = useState({
     loginId: "",
     password: "",
@@ -46,14 +49,31 @@ const LoginPage = () => {
                 setLoginDetails({ ...loginDetails, loginId: e.target.value });
               }}
             />
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              className="w-full h-10 pl-2 rounded-lg bg-primary text-white border border-gray-500 mt-4"
-              onChange={(e) => {
-                setLoginDetails({ ...loginDetails, password: e.target.value });
-              }}
-            />
+            <div className="w-full flex items-center justify-center relative">
+              <input
+                type={`${isPasswordVisible ? "text" : "password"}`}
+                placeholder="Confirm Password"
+                className="w-full h-10 pl-2 rounded-lg bg-primary text-white border border-gray-500 mt-4"
+                onChange={(e) => {
+                  setLoginDetails({
+                    ...loginDetails,
+                    password: e.target.value,
+                  });
+                }}
+              />
+              <div
+                className="absolute top-5 right-3 cursor-pointer"
+                onClick={() => {
+                  setIsPasswordVisible(!isPasswordVisible);
+                }}
+              >
+                {isPasswordVisible ? (
+                  <VisibilityOffIcon />
+                ) : (
+                  <RemoveRedEyeIcon />
+                )}
+              </div>
+            </div>
             <p
               className="text-blue-500 m-2 text-start w-full text-xs cursor-pointer"
               onClick={navigateToForgetPassword}

@@ -62,13 +62,15 @@ const Discover = () => {
     fetchAllPosts()
       .then((response) => {
         console.log(response);
-        const postArray = response?.posts?.map((post) => {
-          return {
-            postId: post?.postId,
-            userId: post?.userId,
-            image: post?.postMedia?.imageLink,
-          };
-        });
+        const postArray = response?.posts
+          ?.map((post) => {
+            return {
+              postId: post?.postId,
+              userId: post?.userId,
+              image: post?.postMedia?.imageLink,
+            };
+          })
+          .filter((post) => post.userId !== selfUserId);
         setAllPosts(postArray);
         setPostLoader(false);
       })
@@ -148,7 +150,7 @@ const Discover = () => {
         open={openPostDetails}
         handleCloseFunc={handlePostModalClosing}
         postId={discoveredPostId}
-        userId={discoveredUserId}
+        userId={selfUserId}
       />
     </div>
   );

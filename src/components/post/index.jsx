@@ -123,10 +123,10 @@ const FeedPost = ({ post, key }) => {
 
   return (
     <div
-      className="bg-primary w-full h-auto p-2 rounded-xl my-4 flex flex-col gap-2"
+      className="bg-primary w-full h-auto rounded-xl my-4 flex flex-col gap-2"
       key={key}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 p-3">
         <Avatar src={post?.user?.profilePicture} />
         <span>{post?.user?.userName}</span>
         <FiberManualRecordIcon sx={{ width: 5, height: 5 }} />
@@ -140,7 +140,7 @@ const FeedPost = ({ post, key }) => {
             // src={`data:image/jpeg;base64,${btoa(post?.postMedia?.imageLink)}`}
             src={post?.postMedia?.imageLink}
             alt="Post"
-            className="h-full w-auto object-contain"
+            className="h-full w-auto object-cover"
           />
         </div>
       </div>
@@ -179,7 +179,7 @@ const FeedPost = ({ post, key }) => {
         </div>
       </div>
       <Divider sx={{ backgroundColor: "#484444 !important", width: "100%" }} />
-      <div>
+      <div className="p-3">
         <div>
           {/* <p className="text-sm">
             <span className="font-bold">John Doe</span> and 10 others liked this
@@ -215,7 +215,7 @@ const FeedPost = ({ post, key }) => {
           </div>
         </div>
       </div>
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex items-center justify-between px-3">
         <input
           type="text"
           value={comment}

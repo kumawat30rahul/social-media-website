@@ -485,4 +485,49 @@ userRoutes.post(
   }
 );
 
+//edit user details
+userRoutes.patch("/edit-user", async (req, res) => {
+  const { userId, name, username, bio } = req.body;
+
+  if (!userId) {
+    return res
+      .status(400)
+      .json({ message: "Invalid user ID", status: "error" });
+  }
+
+  try {
+    const user = await UserDetail.findOne({ userId });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found", status: "error" });
+    }
+
+    if (name) {
+      user.name = name;
+    }
+
+    if (username) {
+      user.username = username;
+    }
+
+    if (bio) {
+      user.bio = bio;
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "User details updated successfully",
+      status: "success",
+      userDetails: user,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error });
+  }
+});
+
 module.exports = userRoutes;

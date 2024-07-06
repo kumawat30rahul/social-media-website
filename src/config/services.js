@@ -147,3 +147,8 @@ export const uploadProfileImage = (payload) => {
   const url = `${envBaseUrl}/user/upload-image`;
   return postImageRequest(url, payload);
 };
+
+export const updateProfile = (payload) => {
+  const url = `${envBaseUrl}/user/edit-user`;
+  return patchRequest(url, payload);
+};

@@ -1,4 +1,10 @@
-import { Avatar, IconButton, Tooltip, useMediaQuery } from "@mui/material";
+import {
+  Avatar,
+  CircularProgress,
+  IconButton,
+  Tooltip,
+  useMediaQuery,
+} from "@mui/material";
 import AppsIcon from "@mui/icons-material/Apps";
 import { useEffect, useState } from "react";
 import {
@@ -6,10 +12,12 @@ import {
   followUser,
   getPostsByIds,
   getUserDetails,
+  updateProfile,
 } from "../../config/services";
 import PostPopup from "../post/post-pop-up";
 import { useLocation, useParams } from "react-router-dom";
 import AvatarImage from "../home-profile/avatar";
+import { useSnackbar } from "../hooks/snackbar";
 
 const UserProfileDetails = () => {
   const isMobile = useMediaQuery(`(max-width: 640px)`);
@@ -17,12 +25,19 @@ const UserProfileDetails = () => {
   const [openPostPopup, setOpenPostPopup] = useState(false);
   const [userDetails, setUserDetails] = useState({}); // [1
   const [isFollowing, setIsFollowing] = useState(false); // [2
+  const [editUserDetails, setEditUserDetails] = useState({
+    username: "",
+    name: "",
+    bio: "",
+  }); // [3
   const [posts, setPosts] = useState([]);
   const [postIds, setPostIds] = useState([]); // [2
   const params = useParams();
   const { userId } = params;
   const location = useLocation();
   const { state } = location;
+  const [isEditing, setIsEditing] = useState(false); // [3]
+  const showSnackbar = useSnackbar();
 
   const [discoveredPostId, setDiscoveredPostId] = useState(""); // [3]
   const [discoveredUserId, setDiscoveredUserId] = useState(""); // [4]
@@ -33,6 +48,11 @@ const UserProfileDetails = () => {
       .then((response) => {
         console.log(response);
         setUserDetails(response?.userDetails);
+        setEditUserDetails({
+          username: response?.userDetails?.username,
+          name: response?.userDetails?.name,
+          bio: response?.userDetails?.bio,
+        }); // [1
         const allPostId = response?.userDetails?.posts;
         console.log(allPostId); // [3
         setPostIds(allPostId); // [4
@@ -78,6 +98,27 @@ const UserProfileDetails = () => {
       });
   };
 
+  const [updatingLoader, setUpdatingLoadet] = useState(false);
+  const updatingUserProfile = () => {
+    setUpdatingLoadet(true);
+    const payload = {
+      userId: selfUserId,
+      name: editUserDetails?.name,
+      username: editUserDetails?.username,
+      bio: editUserDetails?.bio,
+    };
+    updateProfile(payload)
+      .then((res) => {
+        setUserDetails(res?.userDetails);
+        setIsEditing(false);
+        setUpdatingLoadet(false);
+      })
+      .catch((err) => {
+        showSnackbar("Something went wrong", "error");
+        setUpdatingLoadet(false);
+      });
+  };
+
   useEffect(() => {
     if (userId) fetchingUserDetails();
   }, [userId]);
@@ -101,9 +142,23 @@ const UserProfileDetails = () => {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <span className="text-xl font-bold">
-                  {userDetails?.username}
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editUserDetails?.username}
+                      onChange={(e) =>
+                        setEditUserDetails({
+                          ...editUserDetails,
+                          username: e.target.value,
+                        })
+                      }
+                      className=" rounded-lg w-auto max-w-36 px-2"
+                    />
+                  ) : (
+                    userDetails?.username
+                  )}
                 </span>
-                {userDetails?.userId !== selfUserId && (
+                {userDetails?.userId !== selfUserId ? (
                   <button
                     className={`${
                       !isFollowing
@@ -113,6 +168,24 @@ const UserProfileDetails = () => {
                     onClick={followHandler}
                   >
                     {isFollowing ? "Unfollow" : "Follow"}
+                  </button>
+                ) : (
+                  <button
+                    className="bg-blue-500 text-white px-5 rounded-lg flex items-center justify-center"
+                    onClick={() =>
+                      isEditing ? updatingUserProfile() : setIsEditing(true)
+                    }
+                  >
+                    {updatingLoader ? (
+                      <CircularProgress
+                        size={20}
+                        sx={{ color: "white !important" }}
+                      />
+                    ) : isEditing ? (
+                      "Save"
+                    ) : (
+                      "Edit Profile"
+                    )}
                   </button>
                 )}
               </div>
@@ -137,10 +210,40 @@ const UserProfileDetails = () => {
                 </span>
               </div>
               <div className="flex flex-col items-start ">
-                {!isMobile && (
-                  <span className="font-bold">{userDetails?.name}</span>
-                )}
-                {!isMobile && <span>{userDetails?.bio}</span>}
+                {!isMobile &&
+                  (isEditing ? (
+                    <input
+                      type="text"
+                      value={editUserDetails?.name}
+                      onChange={(e) =>
+                        setEditUserDetails({
+                          ...editUserDetails,
+                          name: e.target.value,
+                        })
+                      }
+                      className="rounded-lg w-auto max-w-36 px-2"
+                    />
+                  ) : (
+                    <span className="font-bold">{userDetails?.name}</span>
+                  ))}
+
+                {!isMobile &&
+                  (isEditing ? (
+                    <input
+                      type="text"
+                      placeholder="Add Bio..."
+                      value={editUserDetails?.bio}
+                      onChange={(e) =>
+                        setEditUserDetails({
+                          ...editUserDetails,
+                          bio: e.target.value,
+                        })
+                      }
+                      className="rounded-lg w-full px-2 mt-2"
+                    />
+                  ) : (
+                    <span>{userDetails?.bio}</span>
+                  ))}
               </div>
             </div>
           </div>

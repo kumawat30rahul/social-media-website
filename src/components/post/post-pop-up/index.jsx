@@ -108,7 +108,7 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
   return (
     <Modal open={open} onClose={() => handleCloseFunc(false)} disableAutoFocus>
       <Box sx={style}>
-        <div className="flex flex-col md:flex-row items-stretch post-popup-content-conatiner w-full">
+        <div className="flex flex-col md:flex-row items-stretch justify-center post-popup-content-conatiner w-full">
           <div className="bg-gray-800 image-div-popup">
             <img src={postData?.postMedia?.imageLink} className="image-popup" />
           </div>

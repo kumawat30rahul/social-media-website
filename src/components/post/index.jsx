@@ -188,7 +188,10 @@ const FeedPost = ({ post, key }) => {
           <p className="text-sm font-bold">{`${likeNumber} Likes`}</p>
         </div>
         <div className="flex items-start gap-2 mt-2">
-          <Avatar sx={{ width: 20, height: 20 }} />
+          <Avatar
+            sx={{ width: 20, height: 20 }}
+            src={post?.user?.profilePicture}
+          />
           <p className="text-sm">
             <span className="font-bold">{post?.user?.userName}</span>
             <span className="ml-2">{post?.caption}</span>

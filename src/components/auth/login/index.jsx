@@ -9,8 +9,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loginDetails, setLoginDetails] = useState({
-    loginId: "",
-    password: "",
+    loginId: "jhon_Doe",
+    password: "jhonDoe@1999",
   });
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -43,6 +43,7 @@ const LoginPage = () => {
             <h1 className="text-2xl text-white">Log In</h1>
             <input
               type="text"
+              value={loginDetails?.loginId}
               placeholder="Username or Email"
               className="w-full h-10 pl-2 rounded-lg bg-primary text-white border border-gray-500 mt-4"
               onChange={(e) => {
@@ -52,7 +53,8 @@ const LoginPage = () => {
             <div className="w-full flex items-center justify-center relative">
               <input
                 type={`${isPasswordVisible ? "text" : "password"}`}
-                placeholder="Confirm Password"
+                value={loginDetails?.password}
+                placeholder="Your Password"
                 className="w-full h-10 pl-2 rounded-lg bg-primary text-white border border-gray-500 mt-4"
                 onChange={(e) => {
                   setLoginDetails({

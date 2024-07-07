@@ -497,6 +497,7 @@ userRoutes.patch("/edit-user", async (req, res) => {
 
   try {
     const user = await UserDetail.findOne({ userId });
+    const logedInUser = await User.findOne({ userId });
 
     if (!user) {
       return res
@@ -506,10 +507,12 @@ userRoutes.patch("/edit-user", async (req, res) => {
 
     if (name) {
       user.name = name;
+      logedInUser.name = name;
     }
 
     if (username) {
       user.username = username;
+      logedInUser.username = username;
     }
 
     if (bio) {
@@ -517,6 +520,7 @@ userRoutes.patch("/edit-user", async (req, res) => {
     }
 
     await user.save();
+    await logedInUser.save();
 
     return res.status(200).json({
       message: "User details updated successfully",

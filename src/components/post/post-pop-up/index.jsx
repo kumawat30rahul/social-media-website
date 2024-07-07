@@ -25,6 +25,7 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
   const [commentLength, setCommentLength] = useState();
   const navigate = useNavigate();
   const selfUserId = localStorage.getItem("userId");
+  const isMobile = window.innerWidth < 768;
 
   const postComment = (postId) => {
     setCommentLoader(true);
@@ -63,8 +64,8 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "75%",
-    height: "auto",
+    width: isMobile ? "100%" : "75%",
+    height: isMobile ? "100%" : "50vw",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -111,8 +112,8 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
           <div className="bg-gray-800 image-div-popup">
             <img src={postData?.postMedia?.imageLink} className="image-popup" />
           </div>
-          <div className="bg-primary comment-section-popup relative min-w-42">
-            <div className="h-18">
+          <div className="bg-primary comment-section-popup relative min-w-42 overflow-hidden">
+            <div className="h-18 ">
               <div className="flex items-center justify-between p-2">
                 <div className="flex items-center gap-2">
                   <Avatar
@@ -150,8 +151,8 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
                 opacity: "1 !important",
               }}
             />
-            <div className="p-2">
-              <div className="flex flex-col items-start">
+            <div className="p-2 h-[79%] overflow-y-scroll">
+              <div className="flex flex-col items-start flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <Avatar
                     src={userDetails?.profilePicture}
@@ -179,7 +180,7 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
                     margin: "auto",
                   }}
                 />
-                <div className="mt-2 flex flex-col gap-2">
+                <div className="mt-2 flex flex-col gap-2 h-5/6">
                   {postData?.comments?.map((comment, index) => (
                     <div className="flex items-center gap-4" key={index}>
                       <Avatar
@@ -203,7 +204,7 @@ const PostPopup = ({ open, handleCloseFunc, postId, userId }) => {
                 </div>
               </div>
             </div>
-            <div className="h-14  absolute bottom-0 right-0 left-0">
+            <div className="h-14  absolute bottom-0 right-0 left-0 z-50 bg-primary">
               <Divider
                 sx={{
                   backgroundColor: "#484444 !important",

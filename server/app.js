@@ -28,6 +28,8 @@ const corsoptions = {
     "http://localhost:4173",
     "https://social-media-website-silk.vercel.app/",
     "https://social-media-website-silk.vercel.app",
+    "https://social-media-website-theta.vercel.app/",
+    "https://social-media-website-theta.vercel.app",
   ], // restrict calls to those this address
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   preflightContinue: false,
